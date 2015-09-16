@@ -21,13 +21,14 @@
     "glob": "^5.0.14",
     "js-yaml": "^3.4.2",
     "lodash": "^3.10.1",
-    "monk": "^1.0.1"
+    "monk": "^1.0.1",
+    "cors": "^2.7.1"
   },
   "devDependencies": {
+    "browserify": "10.2.1",
     "bulk-require": "^0.2.1",
     "envify": "^3.4.0",
     "bulkify": "^1.1.1",
-    "cors": "^2.7.1",
     "should": "^7.1.0"
   }
 }
