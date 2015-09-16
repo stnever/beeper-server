@@ -17,12 +17,13 @@
   "dependencies": {
     "bluebird": "^2.9.34",
     "body-parser": "^1.13.3",
+    "cors": "^2.7.1",
     "express": "^4.13.3",
     "glob": "^5.0.14",
     "js-yaml": "^3.4.2",
     "lodash": "^3.10.1",
     "monk": "^1.0.1",
-    "cors": "^2.7.1"
+    "validate.js": "^0.8.0"
   },
   "devDependencies": {
     "browserify": "10.2.1",
