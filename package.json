@@ -1,0 +1,33 @@
+{
+  "name": "beeper",
+  "version": "0.1.0",
+  "description": "You very own twitter-like server",
+  "main": "beeper-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart": "npm run bundle",
+    "prepublish": "npm run bundle",
+    "start": "node beeper-server.js",
+    "bundle": "browserify -t bulkify public/app.js -o public/bundle.js",
+    "watch": "watchify -t bulkify public/app.js -o public/bundle.js --poll=400 -v"
+  },
+  "keywords": [],
+  "author": "stnever (http://github.com/stnever)",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^2.9.34",
+    "body-parser": "^1.13.3",
+    "express": "^4.13.3",
+    "glob": "^5.0.14",
+    "js-yaml": "^3.4.2",
+    "lodash": "^3.10.1",
+    "monk": "^1.0.1"
+  },
+  "devDependencies": {
+    "bulk-require": "^0.2.1",
+    "envify": "^3.4.0",
+    "bulkify": "^1.1.1",
+    "cors": "^2.7.1",
+    "should": "^7.1.0"
+  }
+}

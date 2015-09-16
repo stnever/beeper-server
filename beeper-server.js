@@ -1,0 +1,53 @@
+var path = require('path'),
+    express = require('express'),
+    bodyParser = require('body-parser'),
+    cors = require('cors'),
+    expro = require('./src/expro'),
+    glob = require('glob'),
+    config = require('./src/config');
+
+// Load configuration from file.
+var configFile = process.argv.length > 2
+  ? path.resolve(process.argv[2])
+  : path.resolve(__dirname, 'config.yaml')
+
+config.load(configFile);
+
+var app = exports.app = express();
+app.use(cors());
+app.use(express.static(__dirname + '/public'));
+app.use(bodyParser.json({limit: '50mb'})); // for parsing application/json
+
+// // Extrai informação do accessToken em toda chamada a /api/*
+// app.use('/api', oauth.extractAccessToken);
+
+// // Impede acesso a PUT/POST/DELETE por viewers, com algumas exceções.
+// app.use('/api', oauth.preventWriteAccessByViewers);
+
+// Login (geração de token) e logout. Observe que algumas destas
+// URLs são interceptadas pelo /api/* acima.
+// app.post('/oauth/access_token', oauth.createToken);
+// app.post('/api/v1/logout', oauth.logout);
+// app.get('/api/v1/whoami', oauth.whoami);
+
+// Loga método, url, e body.
+app.use(function(req, res, next) {
+  console.log(req.method, req.url, req.body);
+  next();
+})
+
+app.use(expro); // allow returning promises on routes.
+
+// Le todos os arquivos em rest e adiciona como rotas
+glob.sync('src/rest/*.js', {cwd: __dirname}).forEach(function(fname) {
+  var base = path.basename(fname, '.js');
+  var realPath = path.join(__dirname, fname);
+  app.use('/api/' + base, require(realPath));
+})
+
+// Seta o logger para o error handler e pluga o handler no final
+app.use(expro.errorHandler);
+
+app.listen(config.server.port, function() {
+  console.log('Beeper-Server listening on port %s', config.server.port);
+});

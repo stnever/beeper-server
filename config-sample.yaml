@@ -1,0 +1,7 @@
+server:
+  port:     8080
+
+mongodb:
+  url:          localhost/beeper
+#  username:     x
+#  password:     y
