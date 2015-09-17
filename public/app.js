@@ -6,7 +6,7 @@ var components = bulk(__dirname, [
   '**/svc-*.js'
 ]);
 
-var depNames = ['ngRoute', 'ui.bootstrap'];
+var depNames = ['ngRoute', 'ui.bootstrap', 'ngFileUpload'];
 
 function getModuleNames(root) {
   if ( root.name ) depNames.push(root.name);

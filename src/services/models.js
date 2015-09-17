@@ -16,6 +16,12 @@ Wrapper.prototype.findAll = function(filter) {
   var opts = _.pick(filter, 'offset', 'limit', 'sort');
   var where = _.omit(filter, 'offset', 'limit', 'sort');
 
+  if ( _.isString(opts.sort) ) {
+    opts.sort = opts.sort.split(',').map(function(pair) {
+      return pair.split(' ');
+    })
+  }
+
   if ( opts.offset ) { opts.skip = opts.offset; delete opts.offset }
   return this.collection.findAsync(where, opts);
 }
@@ -34,6 +40,14 @@ Wrapper.prototype.destroy = function(where) {
 
 Wrapper.prototype.create = function(obj) {
   return this.collection.insertAsync(obj);
+}
+
+Wrapper.prototype.update = function(id, obj) {
+  return this.collection.updateByIdAsync(id, {$set: obj});
+}
+
+Wrapper.prototype.bulkUpdate = function(where, what) {
+  return this.collection.updateAsync(where, what);
 }
 
 module.exports = {

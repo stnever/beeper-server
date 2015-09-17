@@ -1,3 +1,10 @@
+<a href="#/sources/edit/new" class="btn btn-large btn-primary">
+  <span class="fa fa-fw fa-lg fa-plus"></span>
+  Create a source
+</a>
+
+<br><br>
+
 <div class="media" ng-repeat="s in sources">
   <div class="media-left">
     <a href="#/sources/{{s.name}}">
@@ -9,15 +16,12 @@
       <h4 class="media-heading">{{s.name}}</h4>
     </a>
     {{s.description | ifBlank:'No description.'}}
+
+    <hr>
+
+    {{s.latestBeep.contents}}
   </div>
 </div>
-
-<button class="btn btn-large btn-primary">
-  <span class="fa fa-fw fa-lg fa-plus"></span>
-  Create a source
-</button>
-
-<br><br>
 
 <div class="alert alert-info" ng-if="sources.length == 0">
   <h3>There are no sources in this Beeper yet.</h3>

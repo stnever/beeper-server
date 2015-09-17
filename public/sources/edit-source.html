@@ -1,0 +1,46 @@
+<style>
+.drop-box {
+    background: #F8F8F8;
+    border: 5px dashed #DDD;
+    height: 65px;
+    text-align: center;
+    padding-top: 18px;
+    margin-bottom: 10px;
+}
+.dragover {
+    border: 5px dashed blue;
+}
+</style>
+
+<form class="col-sm-6 col-sm-offset-3">
+  <div class="form-group">
+    <label class="control-label">Source name:</label>
+    <input ng-if="isCreate" class="form-control" type="text" ng-model="source.name">
+    <p ng-if="!isCreate" class="form-control-static">{{source.name}}</p>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label">Description:</label>
+    <textarea rows="3" class="form-control" ng-model="source.description"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label">Image:</label>
+    <div ngf-select ngf-drop ng-model="files" class="drop-box"
+      ngf-drag-over-class="dragover">
+      (Optional) Drag-and-drop an avatar image here.
+    </div>
+    <div ngf-no-file-drop>Drag-and-drop not supported by this browser.</div>
+    <div ng-repeat="f in files">
+      Current file: <code>{{f.name}}</code>, <code>{{f.size | number:0}}</code> bytes
+    </div>
+  </div>
+
+  <div class="form-group">
+    <button class="btn btn-primary btn-lg" ng-click="save()">Save changes</button>
+
+    <button class="btn btn-danger btn-lg pull-right"
+      ng-if="!isCreate" ng-click="confirmDelete(source)">Delete</button>
+  </div>
+
+</form>

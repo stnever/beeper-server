@@ -30,11 +30,17 @@ router.route('/')
       if ( source == null ) return models.Source.create({
         name: obj.source
       })
-    }).then(function() {
+      else return source
+    }).then(function(source) {
       obj.timestamp = new Date();
       if ( obj.tags == null ) obj.tags = [];
       if ( obj.data == null ) obj.data = {};
-      return models.Beep.create(obj);
+      return models.Beep.create(obj).then(function(createdBeep) {
+        return models.Source.bulkUpdate(
+          { _id: source._id },
+          { $set: { latestBeep: createdBeep } }
+        )
+      });
     }).then(returnSuccess)
   })
 

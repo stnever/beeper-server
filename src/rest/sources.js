@@ -26,24 +26,35 @@ router.route('/')
     }).then(returnSuccess)
   })
 
-router.route('/:name')
+// *? will catch source1, source1/subsystem1, etc, but it will
+// be accessible via req.params[0] and not a named param.
+router.route('/*?')
   .get(function(req, res, next) {
-    res.promise = models.Source.findOne({name: req.params.name});
+    var name = req.params[0];
+    res.promise = models.Source.findOne({name: name});
   })
 
+  // Unlike the typical scenario, you can PUT to a non-existing
+  // source and it will be created instead of returning an error.
   .put(function(req, res, next) {
     var obj = req.body;
+    var name = req.params[0];
     res.promise = validateAsync(obj, constraints).then(function() {
-      return models.Source.findOne({name: +req.params.name})
+      return models.Source.findOne({name: name})
     }).then(function(row) {
-      utils.assertNotNull(row, 'No such source ' + req.params.name);
-      return row.set(obj).save();
+      if ( row == null ) return models.Source.create(obj);
+      else return models.Source.update(row._id, obj);
     }).then(returnSuccess)
   })
 
   .delete(function(req, res, next) {
-    res.promise = models.Source.findOne({name: req.params.name}).then(function(row) {
-      utils.assertNotNull(row, 'No such source ' + req.params.name);
-      return models.Source.destroy(row);
+    var name = req.params[0];
+    res.promise = models.Source.findOne({name: name}).then(function(row) {
+      utils.assertNotNull(row, 'No such source ' + name);
+
+      return models.Beep.destroy({source: row.name})
+        .then(function() {
+          return models.Source.destroy({_id: row._id});
+        })
     }).then(returnSuccess)
   })

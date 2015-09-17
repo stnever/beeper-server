@@ -6,3 +6,5 @@ h4.list-group-item-heading .text-muted:before {
 h4.list-group-item-heading a { font-weight: bold; }
 
 .thumbnail { display: inline-block; margin-bottom: 0px }
+
+nav.navbar { border-radius: 0px; }

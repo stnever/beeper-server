@@ -8,8 +8,8 @@
     <h3>{{source.name}}</h3>
     <p>{{source.description}}</p>
     <p>
-      <a href="#" class="btn btn-primary">Edit</a>
-      <a href class="btn btn-default" ng-click="confirmDelete(source)">Delete</a>
+      <a href="#/sources/edit/{{source.name}}" class="btn btn-primary">Edit</a>
+      <button type="button" class="btn btn-default" ng-click="confirmDelete(source)">Delete</button>
     </p>
   </div>
 
