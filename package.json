@@ -22,14 +22,16 @@
     "glob": "^5.0.14",
     "js-yaml": "^3.4.2",
     "lodash": "^3.10.1",
+    "mongodb": "^1.4.39",
     "monk": "^1.0.1",
     "validate.js": "^0.8.0"
   },
   "devDependencies": {
     "browserify": "10.2.1",
     "bulk-require": "^0.2.1",
-    "envify": "^3.4.0",
     "bulkify": "^1.1.1",
-    "should": "^7.1.0"
+    "envify": "^3.4.0",
+    "should": "^7.1.0",
+    "watchify": "^3.6.1"
   }
 }

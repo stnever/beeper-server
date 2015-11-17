@@ -19,7 +19,7 @@ app.config(function($routeProvider) {
 
 app.controller('SourcesController', function($scope, Source) {
   $scope.reload = function() {
-    return Source.findAll().then(function(rows) {
+    return Source.findAll({sort: 'name asc'}).then(function(rows) {
       $scope.sources = rows;
     })
   }
