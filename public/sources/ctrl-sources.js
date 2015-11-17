@@ -1,4 +1,5 @@
-var app = module.exports = angular.module('hrCards', [])
+var utils = require('../services/utils'),
+    app = module.exports = angular.module('hrCards', [])
 
 app.config(function($routeProvider) {
   $routeProvider
@@ -34,7 +35,8 @@ app.controller('SourceTimelineController', function($scope, $routeParams, Beep, 
     })
 
     Beep.findAll({source: $routeParams.name, sort: 'timestamp desc'}).then(function(rows) {
-      $scope.beeps = rows;
+      $scope.days = utils.groupByDay(rows);
+      // $scope.beeps = rows;
     })
   }
 
