@@ -1,20 +1,11 @@
 var _ = require('lodash'),
     models = require('../services/models.js'),
+    service = require('../services/beeper-service'),
     utils = require('../utils.js'),
     returnSuccess = utils.returnSuccess,
-    validateAsync = require('../utils').validateAsync,
     router = require('express').Router();
 
 module.exports = router;
-
-var constraints = {
-  contents: {
-    presence: { message: '^You must supply the beep contents.'}
-  },
-  source: {
-    presence: { message: '^You must supply the beep source.'}
-  }
-}
 
 router.route('/')
   .get(function(req, res, next) {
@@ -23,25 +14,21 @@ router.route('/')
   })
 
   .post(function(req, res, next) {
-    var obj = req.body;
-    res.promise = validateAsync(obj, constraints).then(function() {
-      return models.Source.findOne({name: obj.source})
-    }).then(function(source) {
-      if ( source == null ) return models.Source.create({
-        name: obj.source
+    var wasArray = _.isArray(req.body)
+    res.promise = service.create(req.body)
+      .then(function(result) {
+        if ( wasArray ) {
+          return {
+            result: 'success',
+            ids: _.map(result, 'id')
+          }
+        } else {
+          return {
+            result: 'success',
+            id: result._id
+          }
+        }
       })
-      else return source
-    }).then(function(source) {
-      obj.timestamp = new Date();
-      if ( obj.tags == null ) obj.tags = [];
-      if ( obj.data == null ) obj.data = {};
-      return models.Beep.create(obj).then(function(createdBeep) {
-        return models.Source.bulkUpdate(
-          { _id: source._id },
-          { $set: { latestBeep: createdBeep } }
-        )
-      });
-    }).then(returnSuccess)
   })
 
 router.route('/:id')
