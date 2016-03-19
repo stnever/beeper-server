@@ -2,6 +2,7 @@ var _ = require('lodash'),
     Promise = require('bluebird'),
     models = require('../services/models.js'),
     utils = require('../utils.js'),
+    notifications = require('./notifications'),
     returnSuccess = utils.returnSuccess,
     validateAsync = require('../utils').validateAsync;
 
@@ -45,6 +46,8 @@ exports.create = function(beeps) {
         )
       })
     })).thenReturn(createdBeeps)
+  }).tap(function(result) {
+    return Promise.map(result, notifications.forward)
   }).then(function(result) {
     if ( wasArray ) return result
     else return result[0]

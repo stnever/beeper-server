@@ -54,5 +54,6 @@ module.exports = {
   Source: new Wrapper('sources'),
   Beep: new Wrapper('beeps'),
   Token: new Wrapper('tokens'),
-  Channel: new Wrapper('channels')
+  Channel: new Wrapper('channels'),
+  Account: new Wrapper('accounts')
 }
