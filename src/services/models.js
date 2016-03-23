@@ -3,13 +3,33 @@ var monk = require('monk'),
     _ = require('lodash'),
     config = require('../config');
 
-var db = monk(config.mongodb.url, {
-  username : config.mongodb.username,
-  password : config.mongodb.password
-});
+exports.init = function(config) {
 
-function Wrapper(name) {
+  var db = monk(config.mongodb.url, {
+    username : config.mongodb.username,
+    password : config.mongodb.password
+  });
+
+  _.assign(exports, {
+    Source: new Wrapper(db, 'sources'),
+    Beep: new Wrapper(db, 'beeps'),
+    Token: new Wrapper(db, 'tokens'),
+    Channel: new Wrapper(db, 'channels'),
+    Account: new Wrapper(db, 'accounts')
+  })
+}
+
+function Wrapper(db, name) {
   this.collection = Promise.promisifyAll(db.get(name));
+}
+
+Wrapper.prototype.findAndCountAll = function(filter) {
+  var me = this
+  return me.count(filter).then(function(count) {
+    return me.findAll(filter).then(function(rows) {
+      return {count: count, rows: rows}
+    })
+  })
 }
 
 Wrapper.prototype.findAll = function(filter) {
@@ -24,6 +44,11 @@ Wrapper.prototype.findAll = function(filter) {
 
   if ( opts.offset ) { opts.skip = opts.offset; delete opts.offset }
   return this.collection.findAsync(where, opts);
+}
+
+Wrapper.prototype.count = function(filter) {
+  var where = _.omit(filter, 'offset', 'limit', 'sort')
+  return this.collection.countAsync(where)
 }
 
 Wrapper.prototype.findOne = function(where) {
@@ -50,10 +75,3 @@ Wrapper.prototype.bulkUpdate = function(where, what) {
   return this.collection.updateAsync(where, what);
 }
 
-module.exports = {
-  Source: new Wrapper('sources'),
-  Beep: new Wrapper('beeps'),
-  Token: new Wrapper('tokens'),
-  Channel: new Wrapper('channels'),
-  Account: new Wrapper('accounts')
-}

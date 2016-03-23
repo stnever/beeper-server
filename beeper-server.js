@@ -4,6 +4,7 @@ var path = require('path'),
     cors = require('cors'),
     expro = require('./src/expro'),
     glob = require('glob'),
+    debug = require('debug')('beeper:srv'),
     config = require('./src/config');
 
 // Load configuration from file.
@@ -12,6 +13,13 @@ var configFile = process.argv.length > 2
   : path.resolve(__dirname, 'config.yaml')
 
 config.load(configFile);
+
+// AFTER we have the configuration, set up other
+// services that depends on it. If we require some
+// of these before this time, they may end up
+// require-ing incomplete services.
+require('./src/services/models').init(config)
+require('./src/services/notifications').init(config)
 
 var app = exports.app = express();
 app.use(cors());
@@ -32,7 +40,7 @@ app.use(bodyParser.json({limit: '50mb'})); // for parsing application/json
 
 // Loga método, url, e body.
 app.use(function(req, res, next) {
-  console.log(req.method, req.url, req.body);
+  debug(req.method, req.url, req.body || '');
   next();
 })
 
@@ -49,5 +57,5 @@ glob.sync('src/rest/*.js', {cwd: __dirname}).forEach(function(fname) {
 app.use(expro.errorHandler);
 
 app.listen(config.server.port, function() {
-  console.log('Beeper-Server listening on port %s', config.server.port);
+  debug('Beeper-Server listening on port %s', config.server.port);
 });

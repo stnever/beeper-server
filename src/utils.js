@@ -1,3 +1,7 @@
+var _ = require('lodash'),
+    util = require('util'),
+    moment = require('moment')
+
 module.exports.httpErr = function(status, message) {
   var msg = util.format.apply(util, _.rest(arguments));
   var e = new Error(msg);
@@ -43,4 +47,12 @@ exports.validateAsync = function(obj, constraints) {
     cleanAttributes: false,
     wrapErrors: ValidationErrors
   })
+}
+
+exports.logQs = function(obj) {
+  if ( obj == null || Object.keys(obj).length < 1 ) return '';
+  return _.reduce(obj, function(acc, val, key) {
+    if ( _.isDate(val) ) val = moment(val).format()
+    return acc.push(key + '=' + val)
+  }).join(' ')
 }

@@ -48,8 +48,16 @@ router.route('/:code')
     }).then(returnSuccess)
   })
 
+  .patch(function(req, res) {
+    var where = {code: req.params.code},
+        what  = {$set: req.body}
+
+    res.promise = models.Account.bulkUpdate(where, what)
+      .then(returnSuccess)
+  })
+
   .delete(function(req, res, next) {
-    var code = req.params[0];
+    var code = req.params.code;
     res.promise = models.Account.findOne({code: code}).then(function(row) {
       utils.assertNotNull(row, 'No such Account ' + code);
 

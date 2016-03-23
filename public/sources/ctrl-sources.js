@@ -34,8 +34,10 @@ app.controller('SourceTimelineController', function($scope, $routeParams, Beep, 
       $scope.source = rows[0];
     })
 
-    Beep.findAll({source: $routeParams.name, sort: 'timestamp desc'}).then(function(rows) {
-      $scope.days = utils.groupByDay(rows);
+    Beep.findAll({
+      source: $routeParams.name, sort: 'timestamp desc'
+    }).then(function(data) {
+      $scope.days = utils.groupByDay(data.rows);
       // $scope.beeps = rows;
     })
   }

@@ -35,8 +35,18 @@ router.route('/')
       where[k] = JSON.parse(v)
     })
 
-    console.log('Beeps filter: %s', JSON.stringify(where))
-    res.promise = models.Beep.findAll(where)
+    var countOnly = req.query.countOnly == 'true'
+
+    console.log('Beeps filter: %s (count only? %s)',
+      JSON.stringify(where), countOnly)
+
+    if ( countOnly ) {
+      res.promise = models.Beep.count(where).then(function(n) {
+        return {count: n}
+      })
+    } else {
+      res.promise = models.Beep.findAndCountAll(where)
+    }
   })
 
   .post(function(req, res, next) {
