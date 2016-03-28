@@ -86,6 +86,56 @@ Beeps are analogous to tweets. They usually have the following JSON representati
 
 Channels are simply saved searches. They are useful to create quick bookmarks to common views into the data. For example, you can create a channel that lists all the beeps with the `#webserver` tag, or all beeps from sources `server1` and `server2`, or many other combinations.
 
+## Accounts
+
+Accounts represent users. This is used both to authenticate viewers
+of the web application, and also to store Subscriptions. Subscriptions
+are a way to say, "send me an email when a beep with these characteristics
+is received".
+
+The JSON representation is as follows:
+
+  {
+    # Required. Use only URL-friendly characters.
+    code: 'stnever',
+
+    # Optional, but you won't receive any emails if this is empty.
+    email: 'stnever@example.com',
+
+    # Optional. This will be used in the future to send text messages.
+    phone: '555-1234',
+
+    # This field stores the date this account was last used in the
+    # webapp. This is useful to determine which messages from its
+    # subscriptions are "new" or "unread".
+    lastAccess: new Date('2016-03-24T14:45:00Z'),
+
+    # Optional, the default is "human". These are useful to
+    # filter flesh-and-bone user accounts, from system (bot)
+    # accounts. The "root" account (created on system startup)
+    # is the only one that can create other accounts.
+    role: "human|system"
+
+    subscriptions: [
+      {
+        # This is a mongodb-like query object. Beeps that match
+        # this query will cause a notification to be sent to this
+        # account. Note that empty objects DO NOT match all beeps;
+        # to do this, specify criteria: {all:true}
+        criteria: Object,
+
+        # These boolean indicate that the notification is to be
+        # sent via text message or email. Additional notification
+        # methods are currently being brainstormed.
+        sms: false,
+        email: true
+      }
+    ]
+  }
+
+Accounts also have a password, but it is not associated with the resource
+above. To change it, check the OAuth documentation below.
+
 # REST API
 
 The Beeper service provides a simple REST api to post and retrieve beeps:
@@ -122,4 +172,34 @@ When calling the API, you must send an authentication token as a header. However
     curl -H "access_token: anonymous"
 
 If the server is to be publicly accessible, however, you should disable this token and issue tokens only to trusted clients.
+
+## OAuth
+
+This server uses a subset of the OAuth authorization flow.
+
+To change a password, one must call:
+
+    POST /accounts/:code/password
+    {"newPassword": "xyz"}
+
+Note that this API call *requires* an `access_token`. Furthermore, the
+token must either be associated with a root account, or the same account
+being changed.
+
+To log in and obtain a token, one must call:
+
+    POST /oauth/access_token
+    {"grant_type": "password", "username": "stnever", "password": "abc"}
+
+The response (if successfull) will contain the access_token to be used
+in all subsequent operations:
+
+    {"access_token": 'XYZabc123'}
+
+Note that this flow applies to both human users, and external systems.
+However, external systems CANNOT change their own passwords; this
+can only be done by a root account.
+
+
+
 
