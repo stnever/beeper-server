@@ -20,7 +20,7 @@ app.factory('authInterceptor', function($q, $location,
     responseError: function(rejection) {
       if (rejection.status === 401) {
         console.log("Response Error 401", rejection)
-        // $window.location.href = 'login.html'
+        $window.location.href = 'login.html'
       }
       return $q.reject(rejection);
     }
