@@ -1,7 +1,7 @@
 var _ = require('lodash'),
     moment = require('moment'),
     cev = require('omit-empty'),
-    models = require('../services/models.js'),
+    models = require('../models'),
     service = require('../services/beeper-service'),
     utils = require('../utils.js'),
     returnSuccess = utils.returnSuccess,

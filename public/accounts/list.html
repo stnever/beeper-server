@@ -1,0 +1,41 @@
+<a href="#/accounts/edit/new" class="btn btn-large btn-primary">
+  <span class="fa fa-fw fa-lg fa-plus"></span>
+  Create account
+</a>
+
+<br><br>
+
+<div class="alert alert-info" ng-if="len(accounts) == 0">
+  <h3>There are no accounts in this Beeper yet.</h3>
+
+  You can create an account using the button above.
+</div>
+
+<div class="list-group">
+
+  <div class="list-group-item" ng-repeat="a in accounts">
+    <div class="media" >
+      <div class="media-left">
+        <a href="#/accounts/{{a.code}}">
+          <img class="media-object" src="http://placehold.it/64x64">
+        </a>
+      </div>
+      <div class="media-body">
+
+        <div class="col-md-6">
+          <h4 class="list-group-item-heading">
+            <a href="#/accounts/{{a.code}}">
+              {{a.code}}
+            </a>
+          </h4>
+          Role: {{a.role}}
+          <br>
+          Email: {{a.email | ifBlank:'(none)'}}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+

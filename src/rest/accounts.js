@@ -1,5 +1,5 @@
 var _ = require('lodash'),
-    models = require('../services/models'),
+    models = require('../models'),
     utils = require('../utils'),
     returnSuccess = utils.returnSuccess,
     validateAsync = require('../utils').validateAsync,
@@ -16,7 +16,11 @@ var constraints = {
 router.route('/')
   .get(function(req, res, next) {
     var filter = req.query;
-    res.promise = models.Account.findAll(filter);
+    res.promise = models.Account.findAndCountAll(filter)
+      .then(function(data) {
+        data.rows.forEach(function(acc) { delete acc.passwordHash })
+        return data
+      });
   })
 
   .post(function(req, res, next) {

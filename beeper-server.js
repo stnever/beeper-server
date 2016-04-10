@@ -5,6 +5,7 @@ var path = require('path'),
     expro = require('./src/expro'),
     glob = require('glob'),
     debug = require('debug')('beeper:srv'),
+    oauth = require('./src/rest/oauth'),
     config = require('./src/config');
 
 // Load configuration from file.
@@ -18,13 +19,14 @@ config.load(configFile);
 // services that depends on it. If we require some
 // of these before this time, they may end up
 // require-ing incomplete services.
-require('./src/services/models').init(config)
+require('./src/models').init(config)
 require('./src/services/notifications').init(config)
 
 var app = exports.app = express();
 app.use(cors());
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json({limit: '50mb'})); // for parsing application/json
+
 
 // // Extrai informação do accessToken em toda chamada a /api/*
 // app.use('/api', oauth.extractAccessToken);
@@ -38,6 +40,8 @@ app.use(bodyParser.json({limit: '50mb'})); // for parsing application/json
 // app.post('/api/v1/logout', oauth.logout);
 // app.get('/api/v1/whoami', oauth.whoami);
 
+app.use(oauth.extractAccessToken)
+
 // Loga método, url, e body.
 app.use(function(req, res, next) {
   debug(req.method, req.url, req.body || '');
@@ -46,11 +50,14 @@ app.use(function(req, res, next) {
 
 app.use(expro); // allow returning promises on routes.
 
+app.use('/api/oauth', oauth.router)
+
 // Le todos os arquivos em rest e adiciona como rotas
 glob.sync('src/rest/*.js', {cwd: __dirname}).forEach(function(fname) {
   var base = path.basename(fname, '.js');
   var realPath = path.join(__dirname, fname);
-  app.use('/api/' + base, require(realPath));
+  if ( base != 'oauth' )
+    app.use('/api/' + base, require(realPath));
 })
 
 // Seta o logger para o error handler e pluga o handler no final

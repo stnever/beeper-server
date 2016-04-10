@@ -1,6 +1,6 @@
 var _ = require('lodash'),
     Promise = require('bluebird'),
-    models = require('../services/models.js'),
+    models = require('../models'),
     utils = require('../utils.js'),
     notifications = require('./notifications'),
     returnSuccess = utils.returnSuccess,

@@ -1,26 +1,8 @@
-var monk = require('monk'),
-    Promise = require('bluebird'),
-    _ = require('lodash'),
-    config = require('../config');
+var _ = require('lodash'),
+    Promise = require('bluebird')
 
-exports.init = function(config) {
-
-  var db = monk(config.mongodb.url, {
-    username : config.mongodb.username,
-    password : config.mongodb.password
-  });
-
-  _.assign(exports, {
-    Source: new Wrapper(db, 'sources'),
-    Beep: new Wrapper(db, 'beeps'),
-    Token: new Wrapper(db, 'tokens'),
-    Channel: new Wrapper(db, 'channels'),
-    Account: new Wrapper(db, 'accounts')
-  })
-}
-
-function Wrapper(db, name) {
-  this.collection = Promise.promisifyAll(db.get(name));
+var Wrapper = module.exports = function Wrapper(db, name) {
+  this.collection = Promise.promisifyAll(db.get(name))
 }
 
 Wrapper.prototype.findAndCountAll = function(filter) {
@@ -33,17 +15,17 @@ Wrapper.prototype.findAndCountAll = function(filter) {
 }
 
 Wrapper.prototype.findAll = function(filter) {
-  var opts = _.pick(filter, 'offset', 'limit', 'sort');
-  var where = _.omit(filter, 'offset', 'limit', 'sort');
+  var opts = _.pick(filter, 'offset', 'limit', 'sort')
+  var where = _.omit(filter, 'offset', 'limit', 'sort')
 
   if ( _.isString(opts.sort) ) {
     opts.sort = opts.sort.split(',').map(function(pair) {
-      return pair.split(' ');
+      return pair.split(' ')
     })
   }
 
   if ( opts.offset ) { opts.skip = opts.offset; delete opts.offset }
-  return this.collection.findAsync(where, opts);
+  return this.collection.findAsync(where, opts)
 }
 
 Wrapper.prototype.count = function(filter) {

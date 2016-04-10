@@ -38,14 +38,18 @@ app.factory('Source', function(Model, $http) {
   // Note that this means the "save()" method cannot really
   // distinguish between objects that exist or not (this is
   // intentional). In practice, save() will always update().
-  var svc = Model('api/sources', 'name');
+  var svc = Model('api/sources', 'name')
   return svc;
-});
+})
 
 app.factory('Channel', function(Model) {
-  return Model('api/channels');
-});
+  return Model('api/channels')
+})
+
+app.factory('Account', function(Model) {
+  return Model('api/accounts')
+})
 
 app.factory('Beep', function(Model) {
-  return Model('api/beeps');
-});
+  return Model('api/beeps')
+})

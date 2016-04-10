@@ -1,5 +1,5 @@
 var _ = require('lodash'),
-    models = require('../services/models.js'),
+    models = require('../models'),
     utils = require('../utils.js'),
     returnSuccess = utils.returnSuccess,
     validateAsync = require('../utils').validateAsync,

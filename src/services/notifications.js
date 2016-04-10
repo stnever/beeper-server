@@ -1,6 +1,6 @@
 var _ = require('lodash'),
     Promise = require('bluebird'),
-    models = require('./models'),
+    models = require('../models'),
     nodemailer = require('nodemailer'),
     showdown = require('showdown'),
     converter = new showdown.Converter(),

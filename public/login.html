@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html ng-app="BeeperWebLogin">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Beeper</title>
+
+  <link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="shortcut icon" href="/favicons/favicon.ico">
+
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/font-awesome.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+
+  <style>
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee;
+}
+
+#logo {
+  display: block;
+  width: 300px;
+  height: 300px;
+  background-image: url(favicons/android-chrome-192x192.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: #EE0C5B;
+  border-radius: 6px;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+  </style>
+</head>
+
+<body class="login" ng-controller="LoginCtrl">
+
+  <div class="container-fluid">
+
+    <div>
+      <form class="form-signin" role="form">
+        <div id="logo"></div>
+        <h2 class="form-signin-heading">Sign In</h2>
+        <input type="text" class="form-control" placeholder="Username" autofocus ng-model="username">
+        <input type="password" class="form-control" placeholder="Password" ng-model="password">
+        <p class="alert alert-danger" ng-show="message != null">
+          {{message}}
+        </p>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="doLogin()">Go</button>
+      </form>
+    </div>
+
+  </div>
+
+</body>
+
+<script src="lib/jquery.min.js"></script>
+<script src="lib/angular.min.js"></script>
+
+<script type="text/javascript">
+var app = angular.module('BeeperWebLogin', [])
+
+app.controller('LoginCtrl', function($scope, $http, $window) {
+
+  $scope.doLogin = function() {
+    $http.post('api/oauth/access_token', {
+      username: $scope.username,
+      password: $scope.password,
+      grant_type: 'password'
+    }).then(function(res) {
+      if ( res.status != 200 )
+        throw new Error(res.status, res.data)
+
+      localStorage.setItem('beeper_web_token',
+        res.data.access_token)
+
+      $window.location.href = '/index.html'
+
+    }).catch(function(err) {
+      $scope.message = 'Invalid username or password';
+      $scope.password = '';
+    })
+  }
+})
+
+
+</script>
+</html>
