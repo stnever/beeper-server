@@ -5,6 +5,13 @@ var _ = require('lodash'),
 
 var padL = _.partialRight(_.padLeft, ' ')
 
+exports.show = function(args) {
+  if ( args.account == null ) throw new Error('Missing --account code')
+  return models.Account.findOne({code: args.account}).tap(function(acc) {
+    console.log(JSON.stringify(acc, null, ' '))
+  })
+}
+
 exports.ls = function() {
   return models.Account.findAll().each(function(row) {
     console.log('Account { code: %s, role: %s, email: %s, ' +

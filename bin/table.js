@@ -6,12 +6,15 @@ exports.display = function(opts, rows) {
   var data = []
   data.push(opts.head.map(function(h) { return chalk.green(h) }))
 
-  rows.forEach(function(row) {
+  rows.forEach(function(row, i) {
     var tabRow = opts.pick.map(function(prop) {
       if ( _.isFunction(prop) ) {
         return prop(row) || 'null'
+      } else if ( prop == '$index' ) {
+        return i
       } else {
-        return _.get(row, prop, 'null')
+        var pieces = prop.split('|')
+        return _.get(row, pieces[0].trim(), pieces[1] || 'null')
       }
     })
 

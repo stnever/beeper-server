@@ -7,7 +7,11 @@ var _ = require('lodash'),
 
 var padL = _.partialRight(_.padLeft, ' ')
 
-exports.ls = function() {
+exports.ls = function(args) {
+  if ( args.account ) {
+    return models.Account.findOne({code: args.account}).tap(showSubs)
+  }
+
   return models.Account.findAll().tap(tablify({
     head: ['Account', 'Subscriptions'],
     pick: ['code', function(acc) { return JSON.stringify(acc.subscriptions || 'null')}]
@@ -16,8 +20,8 @@ exports.ls = function() {
 
 function showSubs(account) {
   tablify({
-    head: ['All?', 'Tags', 'Source', 'Email?', 'SMS?'],
-    pick: ['criteria.all', 'criteria.tags', 'criteria.source', 'email', 'sms'],
+    head: ['#', 'All?', 'Tags', 'Source', 'Email?', 'SMS?'],
+    pick: ['$index', 'criteria.all', 'criteria.tags', 'criteria.source', 'email', 'sms'],
     colWidths: [10, 30, 20, 10, 10]
   })(account.subscriptions)
 }
