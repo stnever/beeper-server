@@ -23,7 +23,7 @@ function showSubs(account) {
     head: ['#', 'All?', 'Tags', 'Source', 'Email?', 'SMS?'],
     pick: ['$index', 'criteria.all', 'criteria.tags', 'criteria.source', 'email', 'sms'],
     colWidths: [10, 30, 20, 10, 10]
-  })(account.subscriptions)
+  })(account.subscriptions || [])
 }
 
 exports.add = function(args) {
