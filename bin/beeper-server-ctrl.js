@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var minimist = require('minimist'),
-    colors = require('colors'),
+    chalk = require('chalk'),
     Promise = require('bluebird')
 
 var args = minimist(process.argv.slice(2))
@@ -15,8 +15,10 @@ models.init(config)
 
 // Load subcommands
 var commands = {
-  account: require('./cli-account'),
-  token: require('./cli-token')
+  accounts: require('./cli-accounts'),
+  tokens: require('./cli-tokens'),
+  subscriptions: require('./cli-subscriptions'),
+  subs: require('./cli-subscriptions')
 }
 
 function outputHelp() {
@@ -25,7 +27,7 @@ function outputHelp() {
 }
 
 return Promise.try(function() {
-  var c1 = args._[0]
+  var c1 = args._.shift()
   if ( c1 == null || c1 == 'help' || args.help )
     return outputHelp()
 
@@ -33,8 +35,8 @@ return Promise.try(function() {
   if ( command == null )
     throw new Error('No such command: ' + c1)
 
-  var c2 = args._[1]
-  var subcommand = command[c2]
+  var c2 = args._.shift()
+  var subcommand = command[c2 || 'ls']
   if ( subcommand == null )
     throw new Error('No such subcommand: ' + c2)
 
@@ -42,8 +44,8 @@ return Promise.try(function() {
 
 }).catch(function(err) {
 
-  console.log(err.name.red + ' ' + err.message)
   if ( args.v ) console.log(err.stack)
+  else console.log('\n' + chalk.red(err.name) + ' ' + err.message)
 
 }).then(function() {
   process.exit()

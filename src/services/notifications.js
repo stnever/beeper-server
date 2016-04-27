@@ -27,18 +27,20 @@ exports.init = function(config) {
 exports.forward = function(beep) {
 
   return models.Account.findAll().map(function(account) {
-    debug('Checking subscriptions for account %s', account.code)
+    // debug('Checking subscriptions for account %s', account.code)
     var rule = _.find(account.subscriptions, function(rule) {
       if ( rule.criteria.all == true ) return true;
+      if ( _.isEmpty(rule.criteria) ) return false;
       return _.isMatch(beep, rule.criteria)
     })
 
     if ( rule == null ) {
-      debug('No matching rules')
+      debug('No matching subscriptions for account %s', account.code)
       return;
     }
 
-    debug('Rule match:', rule)
+    debug('Subscription rule match: account %s, criteria %j',
+      account.code, rule.criteria)
 
     var promises = []
     if ( rule.sms   ) promises.push(sendSms(beep, account))
@@ -49,13 +51,14 @@ exports.forward = function(beep) {
 }
 
 function sendSms(beep, account) {
-  debug('sending sms to account %s', account)
+  debug('Sending sms to account %s', account)
+  return Promise.resolve()
 }
 
 var sendAsync = null
 
 function sendEmail(beep, account) {
-  debug('sending email to account %s: %s (nodemailer set up?)',
+  debug('Sending email to account %s: %s (nodemailer set up? %s)',
     account.code, account.email, sendAsync != null)
 
   if ( account.email == null ||
