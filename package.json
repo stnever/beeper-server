@@ -21,7 +21,6 @@
     "bluebird": "^2.9.34",
     "body-parser": "^1.13.3",
     "chalk": "^1.1.3",
-    "cli-table": "^0.3.1",
     "colors": "^1.1.2",
     "cors": "^2.7.1",
     "debug": "^2.2.0",
@@ -37,6 +36,7 @@
     "omit-empty": "github:stnever/omit-empty",
     "randomstring": "^1.1.4",
     "showdown": "^1.3.0",
+    "table": "^3.7.8",
     "validate.js": "^0.8.0"
   },
   "devDependencies": {
