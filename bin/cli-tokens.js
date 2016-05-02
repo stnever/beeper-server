@@ -1,15 +1,16 @@
 var _ = require('lodash'),
     randomstring = require('randomstring'),
     Promise = require('bluebird'),
-    models = require('../src/models')
+    models = require('../src/models'),
+    tablify = require('./table').tablify
 
 var padL = _.partialRight(_.padLeft, ' ')
 
 exports.ls = function() {
-  return models.Token.findAll().each(function(row) {
-    console.log('Token { code: %s , account: %s }',
-      padL(row.code, 32), padL(row.account, 20))
-  })
+  return models.Token.findAll().tap(tablify({
+    head: ['Code', 'Account'],
+    pick: ['code', 'account']
+  }))
 }
 
 exports.create = function(args) {

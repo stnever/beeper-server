@@ -18,7 +18,9 @@ var commands = {
   accounts: require('./cli-accounts'),
   tokens: require('./cli-tokens'),
   subscriptions: require('./cli-subscriptions'),
-  subs: require('./cli-subscriptions')
+  subs: require('./cli-subscriptions'),
+  tags: require('./cli-tags'),
+  sources: require('./cli-sources')
 }
 
 function outputHelp() {

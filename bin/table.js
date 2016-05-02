@@ -9,7 +9,7 @@ exports.display = function(opts, rows) {
   rows.forEach(function(row, i) {
     var tabRow = opts.pick.map(function(prop) {
       if ( _.isFunction(prop) ) {
-        return prop(row) || 'null'
+        return prop(row)
       } else if ( prop == '$index' ) {
         return i
       } else {
@@ -22,9 +22,28 @@ exports.display = function(opts, rows) {
   })
 
   var output = table.default(data, {
-    border: table.getBorderCharacters('void'),
+    border: {
+        topBody: '-',
+        topJoin: '-',
+        topLeft: '-',
+        topRight: '-',
+
+        bottomBody: '',
+        bottomJoin: '',
+        bottomLeft: '',
+        bottomRight: '',
+
+        bodyLeft: '',
+        bodyRight: '',
+        bodyJoin: ' ',
+
+        joinBody: '-',
+        joinLeft: '',
+        joinRight: '',
+        joinJoin: ''
+    },
     columnDefault: { paddingLeft: 1, paddingRight: 1 },
-    drawHorizontalLine: function() { return false }
+    drawHorizontalLine: function(i) { return i == 1 }
   })
 
   console.log(output)

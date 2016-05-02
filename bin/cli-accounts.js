@@ -1,7 +1,8 @@
 var _ = require('lodash'),
     Promise = require('bluebird'),
     bcrypt = Promise.promisifyAll(require('bcryptjs')),
-    models = require('../src/models')
+    models = require('../src/models'),
+    tablify = require('./table').tablify
 
 var padL = _.partialRight(_.padLeft, ' ')
 
@@ -13,12 +14,20 @@ exports.show = function(args) {
 }
 
 exports.ls = function() {
-  return models.Account.findAll().each(function(row) {
-    console.log('Account { code: %s, role: %s, email: %s, ' +
-      'hasPassword: %s }',
-      padL(row.code, 30), padL(row.role, 10),
-      padL(row.email, 40), row.passwordHash != null)
-  })
+  return models.Account.findAll().tap(tablify({
+    head: ['Account', 'Role', 'Email', 'Has Pw?'],
+    pick: ['code', 'role', 'email',
+      function(row) { return (row.passwordHash != null) || false }
+    ]
+  }))
+
+
+  // .each(function(row) {
+  //   console.log('Account { code: %s, role: %s, email: %s, ' +
+  //     'hasPassword: %s }',
+  //     padL(row.code, 30), padL(row.role, 10),
+  //     padL(row.email, 40), row.passwordHash != null)
+  // })
 }
 
 function hash(password) {
