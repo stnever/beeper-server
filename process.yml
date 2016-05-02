@@ -1,0 +1,4 @@
+apps:
+  - script:   beeper-server.js
+    env:
+      DEBUG:  beeper:*
