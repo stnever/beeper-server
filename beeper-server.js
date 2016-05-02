@@ -4,7 +4,8 @@ var path = require('path'),
     cors = require('cors'),
     expro = require('./src/expro'),
     glob = require('glob'),
-    debug = require('debug')('beeper:srv'),
+    debug = require('debug'),
+    log = debug('beeper:srv'),
     oauth = require('./src/rest/oauth'),
     config = require('./src/config');
 
@@ -12,6 +13,8 @@ var path = require('path'),
 var configFile = process.argv.length > 2
   ? path.resolve(process.argv[2])
   : path.resolve(__dirname, 'config.yaml')
+
+debug.log = console.log.bind(console)
 
 config.load(configFile);
 
@@ -44,7 +47,7 @@ app.use(oauth.extractAccessToken)
 
 // Loga método, url, e body.
 app.use(function(req, res, next) {
-  debug(req.method, req.url, req.body || '');
+  log(req.method, req.url, req.body || '');
   next();
 })
 
@@ -64,5 +67,5 @@ glob.sync('src/rest/*.js', {cwd: __dirname}).forEach(function(fname) {
 app.use(expro.errorHandler);
 
 app.listen(config.server.port, function() {
-  debug('Beeper-Server listening on port %s', config.server.port);
+  log('Beeper-Server listening on port %s', config.server.port);
 });
