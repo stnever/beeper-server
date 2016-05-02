@@ -41,6 +41,18 @@ Account {
 }
 */
 var Wrapper = require('./wrapper')
-module.exports = function(db) {
-  return new Wrapper(db, 'accounts')
+module.exports = function(conn) {
+  return new Wrapper('Account', {
+    code: String,
+    email: String,
+    phone: String,
+    lastAccess: Date,
+    role: String,
+    passwordHash: String,
+    subscriptions: [{
+      criteria: {},
+      sms: Boolean,
+      email: Boolean
+    }]
+  })
 }

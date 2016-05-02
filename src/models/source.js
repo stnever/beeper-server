@@ -5,5 +5,8 @@
 // }
 var Wrapper = require('./wrapper')
 module.exports = function(db) {
-  return new Wrapper(db, 'sources')
+  return new Wrapper('Source', {
+    name: String,
+    description: String    
+  })
 }

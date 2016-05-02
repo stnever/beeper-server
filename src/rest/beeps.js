@@ -4,14 +4,15 @@ var _ = require('lodash'),
     models = require('../models'),
     service = require('../services/beeper-service'),
     utils = require('../utils.js'),
+    debug = require('debug')('beeper:rest')
     returnSuccess = utils.returnSuccess,
     router = require('express').Router();
 
 module.exports = router;
 
-function m(s) { return s == null ? null : moment(s).toDate() }
-function a(s) { return s == null ? []   : s.split(',') }
-function j(s) { return (s == null || s.trim().length < 1) ? null : JSON.parse(s) }
+function m(s) { return _.get(s, 'length', 0) == 0 ? null : moment(s).toDate() }
+function a(s) { return _.get(s, 'length', 0) == 0 ? [] : s.split(',') }
+function j(s) { return _.get(s, 'length', 0) == 0 ? null : JSON.parse(s) }
 
 router.route('/')
   .get(function(req, res, next) {
@@ -20,11 +21,17 @@ router.route('/')
         $gte: m(req.query.fromDate),
         $lte: m(req.query.untilDate)
       },
-      tags: { $in: a(req.query.tags) },
-      source: req.query.source,
-      offset: +req.params.offset || 0,
-      limit: +req.params.limit || 20,
-      sort: req.params.sort
+      tags: {
+        $in: a(req.query.tags),
+        $nin: a(req.query.withoutTags)
+      },
+      source: {
+        $in: a(req.query.sources),
+        $nin: a(req.query.withoutSources)
+      },
+      offset: +req.query.offset || 0,
+      limit: +req.query.limit || 20,
+      sort: req.query.sort
     })
 
     // Data filters use the mongodb query format.
@@ -37,15 +44,14 @@ router.route('/')
 
     var countOnly = req.query.countOnly == 'true'
 
-    console.log('Beeps filter: %s (count only? %s)',
-      JSON.stringify(where), countOnly)
+    debug('Beeps filter: %j (count only? %s)', where, countOnly)
 
     if ( countOnly ) {
       res.promise = models.Beep.count(where).then(function(n) {
         return {count: n}
       })
     } else {
-      res.promise = models.Beep.findAndCountAll(where)
+      res.promise = models.Beep.findAllAndCount(where)
     }
   })
 
@@ -73,7 +79,7 @@ router.route('/:id')
   })
 
   .delete(function(req, res, next) {
-    res.promise = models.Beep.deleteById(req.params.id)
+    res.promise = models.Beep.destroy({_id: req.params.id})
       .then(returnSuccess)
   })
 

@@ -56,3 +56,9 @@ exports.logQs = function(obj) {
     return acc.push(key + '=' + val)
   }).join(' ')
 }
+
+exports.s2a = function(s) {
+  if ( s == null ) return []
+  if ( _.isArray(s) ) return s
+  return s.split(',').map(function(p) { return p.trim() })
+}

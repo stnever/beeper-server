@@ -43,6 +43,12 @@
 //   }
 // }
 var Wrapper = require('./wrapper')
-module.exports = function(db) {
-  return new Wrapper(db, 'beeps')
+module.exports = function(conn) {
+  return new Wrapper('Beep', {
+    timestamp: Date,
+    contents: String,
+    source: String,
+    tags: [String],
+    data: {}
+  })
 }

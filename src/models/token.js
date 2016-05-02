@@ -4,5 +4,8 @@
 // }
 var Wrapper = require('./wrapper')
 module.exports = function(db) {
-  return new Wrapper(db, 'tokens')
+  return new Wrapper('Token', {
+    code: String,
+    account: String
+  })
 }
