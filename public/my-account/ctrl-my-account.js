@@ -1,5 +1,5 @@
 var utils = require('../services/utils'),
-    app = module.exports = angular.module('bpMyAccount', [])
+    app = module.exports = angular.module('BeeperWeb')
 
 app.config(function($routeProvider) {
   $routeProvider

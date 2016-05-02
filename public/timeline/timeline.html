@@ -1,0 +1,147 @@
+<style>
+.btn-group > .btn.btn-filter-label,
+.btn-group > .btn.btn-filter-label:hover,
+.btn-group > .btn.btn-filter-remove {
+  z-index: 0;
+  /*background-color: #51AF4C;
+  border-color: #51AF4C;*/
+  background-color: #6c7a89;
+  border-color: #6c7a89;
+  color: #fff;
+}
+
+.btn-group > .btn.btn-filter-remove {
+  /*border-left-color: #68DF61;*/
+  border-left-color: #999;
+}
+
+.btn-group.filter-source .btn-filter-label {
+  color: yellow;
+}
+
+.btn-group.filter-tag .btn-filter-label {
+  color: #2FFF72;
+}
+
+tr .summary-actions a,
+tr .summary-actions a:hover {
+  text-decoration: none !important;
+  color: #ddd !important;
+}
+
+tr:hover .summary-actions a,
+tr:hover .summary-actions a:hover {
+  color: #18bc9c !important;
+}
+
+</style>
+
+<div class="row">
+  <div class="col-xs-12 well well-sm">
+
+    <div class="timeline-filter">
+
+      <div class="btn-group" dropdown>
+        <button class="btn btn-warning btn-sm dropdown-toggle" dropdown-toggle>
+          Filter <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href>Save...</a></li>
+          <li><a href>Modify...</a></li>
+          <li class="divider"></li>
+          <li><a href>Clear</a></li>
+        </ul>
+      </div>
+
+      <div class="filter-item source"
+        ng-repeat="s in filter.sources">
+        <span class="filter-label">{{s}}</span>
+        <button class="filter-btn" ng-click="filter.sources.splice($index, 1)">
+          &times;
+        </button>
+      </div>
+
+      <div class="filter-item source"
+        ng-repeat="s in filter.withoutSources">
+        <span class="filter-label">not: {{s}}</span>
+        <button class="filter-btn" ng-click="filter.withoutSources.splice($index, 1)">
+          &times;
+        </button>
+      </div>
+
+      <div class="filter-item tag"
+        ng-repeat="t in filter.tags">
+        <span class="filter-label">{{t}}</span>
+        <button class="filter-btn" ng-click="filter.tags.splice($index, 1)">
+          &times;
+        </button>
+      </div>
+
+      <div class="filter-item tag"
+        ng-repeat="t in filter.withoutTags">
+        <span class="filter-label">not: {{t}}</span>
+        <button class="filter-btn" ng-click="filter.withoutTags.splice($index, 1)">
+          &times;
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-3 well well-sm timeline-summary">
+
+    <table>
+
+      <tr ng-repeat="s in summary.sources">
+        <td>
+          <span class="filter-item source">
+            <span class="filter-label">{{s.name}}</span>
+          </span>
+        </td>
+        <td class="text-right">{{s.count}}</td>
+        <td class="text-right actions">
+          <a href ng-click="withSource(s.name)"
+            title="Show ONLY beeps from this source">
+            <span class="fa fa-fw fa-plus"></span>
+          </a>
+          <a href ng-click="withoutSource(s.name)"
+            title="Do NOT show beeps from this source">
+            <span class="fa fa-fw fa-minus"></span>
+          </a>
+        </td>
+      </tr>
+
+      <tr ng-repeat="t in summary.tags">
+        <td>
+          <span class="filter-item tag">
+            <span class="filter-label">{{t.name}}</span>
+          </span>
+        </td>
+        <td class="text-right">{{t.count}}</td>
+        <td class="text-right actions">
+          <a href ng-click="withTag(t.name)"
+            title="Show ONLY beeps with this tag">
+            <span class="fa fa-fw fa-plus"></span>
+          </a>
+          <a href ng-click="withoutTag(t.name)"
+            title="Do NOT show beeps with this tag">
+            <span class="fa fa-fw fa-minus"></span>
+          </a>
+        </td>
+      </tr>
+
+    </table>
+
+  </div>
+  <div class="col-sm-9">
+
+    <beeps-list data="beeps"></beeps-list>
+
+    <div class="alert alert-warning" ng-if="beeps.length < 1">
+      No beeps to display.
+    </div>
+
+  </div>
+</div>

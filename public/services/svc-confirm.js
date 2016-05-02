@@ -1,4 +1,4 @@
-var app = module.exports = angular.module('hrConfirmDialog', [])
+var app = module.exports = angular.module('BeeperWeb')
 
 app.factory('ConfirmDialog', function($modal, $interpolate) {
   return function(opts) {

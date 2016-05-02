@@ -1,6 +1,6 @@
 var _ = require('lodash')
 
-module.exports = angular.module('filters', []);
+module.exports = angular.module('BeeperWeb');
 
 module.exports
   .filter('ifBlank', function () {

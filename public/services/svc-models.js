@@ -1,6 +1,31 @@
-var app = module.exports = angular.module('bpModels', [])
+var app = module.exports = angular.module('BeeperWeb'),
+    _ = require('lodash'),
+    moment = require('moment')
 
 function returnData(res) { return res.data }
+
+app.factory('paramsSerializer', function() {
+
+  return {
+    request: function(req) {
+      if ( req.params ) {
+        var newParams = _.mapValues(req.params, function(val, key) {
+          if ( _.isArray(val) ) return val.join(',')
+          if ( _.isDate(val) ) return moment(val).format('YYYY-MM-DDTHH:mm:ssZ')
+          return val
+        })
+
+        req.params = newParams
+      }
+
+      return req
+    }
+  }
+})
+
+app.config(function($httpProvider) {
+  $httpProvider.interceptors.push('paramsSerializer')
+})
 
 app.factory('Model', function($http) {
   return function(endpoint, idProperty) {
@@ -52,4 +77,13 @@ app.factory('Account', function(Model) {
 
 app.factory('Beep', function(Model) {
   return Model('api/beeps')
+})
+
+app.factory('Tag', function($http) {
+  return {
+    getCloud: function(sources) {
+      return $http.get('api/tags', {params: {sources: sources}})
+        .then(returnData)
+    }
+  }  
 })

@@ -1,32 +1,83 @@
 var utils = require('../services/utils'),
-    app = module.exports = angular.module('hrCards', [])
+    app = module.exports = angular.module('BeeperWeb')
 
 app.config(function($routeProvider) {
   $routeProvider
-    .when('/sources', {
-      templateUrl: 'sources/sources.html',
-      controller: 'SourcesController'
-    })
-    .when('/sources/edit/:name*', {
-      templateUrl: 'sources/edit-source.html',
-      controller: 'EditSourceController'
-    })
-    .when('/sources/:name*', {
-      templateUrl: 'sources/timeline.html',
-      controller: 'SourceTimelineController'
-    })
+    // .when('/sources', {
+    //   templateUrl: 'sources/sources.html',
+    //   controller: 'SourcesController'
+    // })
+    // .when('/sources/edit/:name*', {
+    //   templateUrl: 'sources/edit-source.html',
+    //   controller: 'EditSourceController'
+    // })
+    // .when('/sources/:name*', {
+    //   templateUrl: 'sources/timeline.html',
+    //   controller: 'SourceTimelineController'
+    // })
   }
 )
 
-app.controller('SourcesController', function($scope, Source) {
-  $scope.reload = function() {
-    return Source.findAll({sort: 'name asc'}).then(function(rows) {
-      $scope.sources = rows;
-    })
-  }
+utils.addRoute(app, '/sources',
+  `
+    <a href="#/sources/edit/new" class="btn btn-large btn-primary">
+      <span class="fa fa-fw fa-lg fa-plus"></span>
+      Create a source
+    </a>
 
-  $scope.reload();
-})
+    <br><br>
+
+    <div class="list-group">
+      <div ng-repeat="s in sources">
+        <source-in-list source="s"></source-in-list>
+      </div>
+    </div>
+
+    <div class="alert alert-info" ng-if="sources.length == 0">
+      <h3>There are no sources in this Beeper yet.</h3>
+
+      You can create a source using the button above. Alternatively,
+      you can create a source automatically by posting a beep to it:
+
+      <ul>
+        <li>using the <code>beeper</code> utility</li>
+        <li>using the <code>beeper-client</code> module in your code.</li>
+      </ul>
+    </div>
+  `,
+  function SourcesController($scope, Source) {
+    $scope.reload = function() {
+      return Source.findAll({sort: 'name asc'}).then(function(rows) {
+        $scope.sources = rows;
+      })
+    }
+
+    $scope.reload();
+  }
+)
+
+utils.addRoute(app, '/sources/:name',
+  `
+    <div class="col-sm-4">
+      <source-bio source="source"></source-bio>
+    </div>
+    <div class="col-sm-8">
+      <beeps-list data="beeps"></beeps-list>
+    </div>
+  `,
+  function SourcesController($scope, $routeParams, Source, Beep) {
+    var sourceName = $routeParams.name,
+        storeIn = utils.storeIn
+
+    $scope.reload = function() {
+      Source.find(sourceName).then(storeIn($scope, 'source'))
+      Beep.findAll({source: sourceName, sort: 'timestamp desc'})
+        .then(storeIn($scope, 'beeps'))
+    }
+
+    $scope.reload()
+  }
+)
 
 app.controller('SourceTimelineController', function($scope, $routeParams, Beep, Source, ConfirmDialog, $location) {
   $scope.reload = function() {

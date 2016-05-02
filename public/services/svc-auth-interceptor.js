@@ -1,5 +1,5 @@
 var _ = require('lodash'),
-    app = module.exports = angular.module('authInterceptor', [])
+    app = module.exports = angular.module('BeeperWeb')
 
 app.run(function($http) {
   $http.defaults.headers.common.access_token =

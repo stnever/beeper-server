@@ -1,29 +1,20 @@
-var bulk = require('bulk-require');
+var deps = ['ngRoute', 'ui.bootstrap',
+  'ngFileUpload']
 
-// Apenas ctrl-* e svc-* serão lidos como módulos do Angular
+// Declare the main module
+var app = angular.module('BeeperWeb', deps)
+
+// Require all ctrl-* and svc-* files. Each of them adds
+// something to the main module.
+var bulk = require('bulk-require')
 var components = bulk(__dirname, [
   '**/ctrl-*.js',
   '**/svc-*.js'
-]);
+])
 
-var depNames = ['ngRoute', 'ui.bootstrap', 'ngFileUpload', 'authInterceptor'];
-
-function getModuleNames(root) {
-  if ( root.name ) depNames.push(root.name);
-  else Object.keys(root).forEach(function(key) {
-    getModuleNames(root[key]);
-  })
-}
-
-x=2;
-
-getModuleNames(components);
-console.log('all dependent modules', depNames);
-
-// Inicializa a aplicação inteira
-var app = angular.module('BeeperWeb', depNames)
-  .config(function($routeProvider, $locationProvider) {
-    $routeProvider
-      .when('/login', {})
-      .otherwise({redirectTo: '/sources'});
-  })
+// Adds the default starting point
+app.config(function($routeProvider, $locationProvider) {
+  $routeProvider
+    .when('/login', {})
+    .otherwise({redirectTo: '/sources'});
+})

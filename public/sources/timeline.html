@@ -1,18 +1,10 @@
 <div class="col-sm-4">
 
-  <div class="thumbnail">
-    <img src="http://placehold.it/256">
-  </div>
-
-  <div>
-    <h3>{{source.name}}</h3>
-    <p>{{source.description}}</p>
-    <p>
-      <a href="#/sources/edit/{{source.name}}" class="btn btn-primary">Edit</a>
-      <button type="button" class="btn btn-default" ng-click="confirmDelete(source)">Delete</button>
-    </p>
-  </div>
+  <source-bio source="source"></source-bio>
 
 </div>
-<div class="col-sm-8" ng-include="'beeps/list.html'">
+<div class="col-sm-8">
+
+  <beeps-list list="beeps"></beeps-list>
+
 </div>
