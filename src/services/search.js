@@ -125,7 +125,7 @@ exports.searchBeeps = function(filter) {
     },
     offset: filter.offset || 0,
     limit: filter.limit || 20,
-    sort: filter.sort
+    sort: filter.sort || '-timestamp'
   })
 
   // Data filters use the mongodb query format.
