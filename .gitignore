@@ -34,3 +34,4 @@ public/bundle.js
 
 *.zip
 *.sql/
+*.mongodmp

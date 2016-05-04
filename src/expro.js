@@ -32,7 +32,7 @@ module.exports.errorHandler = function(err, req, res, next) {
   // an HTTP 500 response.
   else {
     debug('Unexpected error during %s %s: %s', req.method,
-      req.url, err, err.stack);
+      req.url, err.message, err.stack);
     res.status(500).json({error: err.message});
   }
 }

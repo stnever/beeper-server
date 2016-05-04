@@ -72,11 +72,20 @@ app.factory('Channel', function(Model) {
 })
 
 app.factory('Account', function(Model) {
-  return Model('api/accounts')
+  return Model('api/accounts', 'code')
 })
 
 app.factory('Beep', function(Model) {
   return Model('api/beeps')
+})
+
+app.factory('Subscription', function($http) {
+  return {
+    create: function(account, sub) {
+      return $http.post(`api/accounts/${account}/subscriptions`, sub)
+        .then(returnData)
+    }
+  }
 })
 
 app.factory('Tag', function($http) {
@@ -85,5 +94,13 @@ app.factory('Tag', function($http) {
       return $http.get('api/tags', {params: {sources: sources}})
         .then(returnData)
     }
-  }  
+  }
+})
+
+app.factory('WhoAmI', function($http) {
+  return {
+    get: function() {
+      return $http.get('api/oauth/whoami').then(returnData)
+    }
+  }
 })

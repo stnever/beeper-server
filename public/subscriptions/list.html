@@ -1,0 +1,71 @@
+<div class="row">
+  <div class="col-sm-10 col-sm-offset-1">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Criteria</th>
+          <th>Send email?</th>
+          <th>Add to inbox?</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tr ng-repeat="sub in subs">
+        <td>{{sub.name}}</td>
+        <td class="timeline-filter">
+
+          <div class="filter-item source"
+            ng-repeat="s in sub.criteria.sources">
+            <span class="filter-label">{{s}}</span>
+          </div>
+
+          <div class="filter-item source"
+            ng-repeat="s in sub.criteria.withoutSources">
+            <span class="filter-label">not: {{s}}</span>
+          </div>
+
+          <div class="filter-item tag"
+            ng-repeat="t in sub.criteria.tags">
+            <span class="filter-label">{{t}}</span>
+          </div>
+
+          <div class="filter-item tag"
+            ng-repeat="t in sub.criteria.withoutTags">
+            <span class="filter-label">not: {{t}}</span>
+          </div>
+
+        </td>
+
+        <td>
+          <toggle ng-model="sub.email"></toggle>
+        </td>
+
+        <td>
+          <toggle ng-model="sub.inbox"></toggle>
+        </td>
+
+        <td>
+          <a href ng-click="subs.splice($index, 1)">
+            <span class="fa fa-fw fa-trash"></span>
+          </a>
+        </td>
+
+      </tr>
+    </table>
+
+    <div class="alert alert-warning" ng-if="subs.length < 1">
+      You have no subscriptions.
+    </div>
+
+    <div class="alert alert-info">
+      To add a subscription, make a query, and when you are
+      satisfied with the criteria click the "Filter > Save"
+      command.
+    </div>
+
+    <button class="btn btn-primary btn-lg" ng-click="save()">
+      Save changes
+    </button>
+
+  </div>
+</div>

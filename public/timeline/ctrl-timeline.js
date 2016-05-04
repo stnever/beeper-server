@@ -8,7 +8,12 @@ app.config(function($routeProvider) {
     .when('/timeline', {
       templateUrl: 'timeline/timeline.html',
       controller: 'TimelineController',
-      reloadOnSearch: false
+      reloadOnSearch: false,
+      resolve: {
+        currentUser: function(WhoAmI) {
+          return WhoAmI.get()
+        }
+      }
     })
   }
 )
@@ -25,7 +30,10 @@ function pull(l, val) {
   _.pull(l, val)
 }
 
-app.controller('TimelineController', function($scope, $rootScope, $routeParams, Beep, Tag, QueryString) {
+app.controller('TimelineController', function($scope, $rootScope,
+  $routeParams, Beep, Tag, QueryString, $modal, Toaster, Subscription,
+  currentUser) {
+
   var filter = $scope.filter = {
     sources: a($routeParams.sources),
     withoutSources: a($routeParams.withoutSources),
@@ -67,6 +75,36 @@ app.controller('TimelineController', function($scope, $rootScope, $routeParams, 
   $scope.withoutTag = function(t) {
     set(filter.withoutTags, t)
     pull(filter.tags, t)
+  }
+
+  $scope.clear = function() {
+    _.assign(filter, {
+      sources: [], withoutSources: [],
+      tags: [], withoutTags: []
+    })
+  }
+
+  $scope.openSaveModal = function() {
+    console.log('opening')
+    $modal.open({
+      template: `
+        <div class="modal-body">
+          <p>Type a name for the saved filter:</p>
+          <input type="text" class="form-control" ng-model="name">
+        </div>
+        <div class="modal-footer text-right">
+          <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+          <button class="btn btn-primary" ng-click="$close(name)">OK</button>
+        </div>
+      `
+    }).result.then(function(name) {
+      Toaster.follow(function() {
+        return Subscription.create(currentUser.code, {
+          name: name,
+          criteria: $scope.filter
+        })
+      })
+    })
   }
 
   $scope.$watch('filter', function(newVal) {

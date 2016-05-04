@@ -128,7 +128,8 @@ exports.acquireToken = function(req, res, next) {
 }
 
 exports.whoami = function(req, res, next) {
-  res.json(_.omit(req.account, 'passwordHash'))
+  var r = req.account.toJSON()
+  res.json(_.omit(r, 'passwordHash'))
 }
 
 exports.logout = function(req, res, next) {

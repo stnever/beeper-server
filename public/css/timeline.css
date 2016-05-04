@@ -1,0 +1,71 @@
+.timeline-filter > * {
+  float: left;
+  margin-right: 3px;
+}
+.filter-item {
+  display: inline-block;
+  overflow: auto;
+  position: relative;
+  vertical-align: middle;
+}
+.filter-item .filter-label,
+.filter-item .filter-btn {
+  display: inline-block;
+  float: left;
+  margin: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 18px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  color: white;
+  background-color: #6c7a89;
+}
+.filter-item .filter-btn {
+  cursor: pointer;
+}
+.filter-item .filter-btn:hover {
+  background-color: #8e9cab;
+}
+.filter-item *:first-child {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.filter-item *:not(:first-child) {
+  border-left-color: #999;
+}
+.filter-item *:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+.filter-item.source .filter-label {
+  color: yellow;
+}
+.filter-item.tag .filter-label {
+  color: lightgreen;
+}
+.timeline-summary table {
+  width: 100%;
+}
+.timeline-summary table td {
+  line-height: 18px;
+  padding: 2px 0;
+}
+.timeline-summary table td a,
+.timeline-summary table td a:hover {
+  text-decoration: none !important;
+  color: #ddd !important;
+}
+.timeline-summary tr:hover a,
+.timeline-summary tr:hover a:hover {
+  color: #18bc9c !important;
+}

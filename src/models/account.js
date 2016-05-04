@@ -50,9 +50,12 @@ module.exports = function(conn) {
     role: String,
     passwordHash: String,
     subscriptions: [{
+      _id: false,
+      name: String,
       criteria: {},
       sms: Boolean,
-      email: Boolean
+      email: Boolean,
+      inbox: Boolean
     }]
   })
 }

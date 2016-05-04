@@ -1,0 +1,62 @@
+<form class="col-sm-6 col-sm-offset-3">
+  <div class="form-group">
+    <label class="control-label">Account code:</label>
+    <input ng-if="isCreate" class="form-control" type="text" ng-model="account.code">
+    <p ng-if="!isCreate" class="form-control-static">{{account.code}}</p>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label">Email:</label>
+    <input class="form-control" type="text" ng-model="account.email">
+  </div>
+
+  <div class="form-group">
+    <label class="control-label">Phone:</label>
+    <input class="form-control" type="text" ng-model="account.phone">
+  </div>
+
+  <div class="form-group">
+    <label class="control-label">Role:</label>
+    <select class="form-control" ng-model="account.role" ng-options="r for r in roles">
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label">Description:</label>
+    <textarea rows="3" class="form-control" ng-model="source.description"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label">Subscriptions:</label>
+    <table class="table">
+      <tr>
+        <th>From source</th>
+        <th>With tags</th>
+        <th>All?</th>
+        <th>Email?</th>
+      </tr>
+      <tr ng-repeat="s in account.subscriptions">
+        <td><input type="text" class="form-control" ng-model="s.criteria.source"></td>
+        <td><input type="text" class="form-control" ng-model="s.criteria.tags"></td>
+        <td><input type="checkbox" class="form-control" ng-model="s.criteria.all"></td>
+        <td><input type="checkbox" class="form-control" ng-model="s.email"></td>
+      </tr>
+      <tr>
+        <td colspan="4">
+          <button class="btn btn-default" ng-click="account.subscriptions.push({criteria:{}})">
+            Add subscription
+          </button>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+
+  <div class="form-group">
+    <button class="btn btn-primary btn-lg" ng-click="save()">Save changes</button>
+
+    <button class="btn btn-danger btn-lg pull-right"
+      ng-if="!isCreate" ng-click="confirmDelete(account)">Delete</button>
+  </div>
+
+</form>

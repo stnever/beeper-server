@@ -11,16 +11,25 @@
     <div class="collapse navbar-collapse" id="main-navbar">
       <ul class="nav navbar-nav">
 
-        <li class="active"><a href="#">Sources</a></li>
+        <li active-when="/sources"><a href="#/sources">Sources</a></li>
 
-        <li class="dropdown" dropdown>
+        <li active-when="/timeline"><a href="#/timeline">Timeline</a></li>
+
+        <li class="dropdown" dropdown ng-controller="SubsMenuCtrl">
           <a class="dropdown-toggle" dropdown-toggle href>
-            Saved Filters <span class="caret"></span>
+            Subscriptions <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-            <li><a href="#/setup/accounts">No saved filters...</a></li>
+            <li ng-repeat="s in subs">
+              <a href="#/timeline?{{paramify(s.criteria)}}">
+                {{s.name || 'Untitled ' + $index}}
+              </a>
+            </li>
+            <li ng-if="subs.length < 1">
+              <a href>(No subscriptions)</a>
+            </li>
             <li class="divider"></li>
-            <li><a href="#/setup/filters">Manage saved filters</a></li>
+            <li><a href="#/subscriptions">Manage subscriptions</a></li>
           </ul>
         </li>
       </ul>

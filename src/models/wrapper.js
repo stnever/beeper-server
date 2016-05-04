@@ -45,14 +45,13 @@ Wrapper.prototype.findAll = function(filter) {
   // TODO query.select usando os attrs
   // TODO query.populate usando include (?)
 
-  return query.exec().then(function(rows) {
+  return query.exec().tap(function(rows) {
     debug('%s results', rows.length)
-    return rows
   })
 }
 
 Wrapper.prototype.findOne = function(filter) {
-  return this.model.findOne(filter)
+  return this.model.findOne(filter).exec()
 }
 
 Wrapper.prototype.findAllAndCount = function(filter) {
@@ -81,7 +80,7 @@ Wrapper.prototype.create = function(obj) {
 }
 
 Wrapper.prototype.update = function(id, obj) {
-  return this.model.findOneAndUpdate({_id: id}, obj);
+  return this.model.findOneAndUpdate({_id: id}, obj).exec();
 }
 
 Wrapper.prototype.bulkUpdate = function(where, what) {

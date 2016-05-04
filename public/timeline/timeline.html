@@ -46,10 +46,10 @@ tr:hover .summary-actions a:hover {
           Filter <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-          <li><a href>Save...</a></li>
+          <li><a href ng-click="openSaveModal()">Save...</a></li>
           <li><a href>Modify...</a></li>
           <li class="divider"></li>
-          <li><a href>Clear</a></li>
+          <li><a href ng-click="clear()">Clear</a></li>
         </ul>
       </div>
 
@@ -135,7 +135,7 @@ tr:hover .summary-actions a:hover {
     </table>
 
   </div>
-  <div class="col-sm-9">
+  <div class="col-sm-9" style="padding-right: 0px;">
 
     <beeps-list data="beeps"></beeps-list>
 

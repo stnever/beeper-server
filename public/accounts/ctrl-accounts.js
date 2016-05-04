@@ -7,7 +7,7 @@ app.config(function($routeProvider) {
       templateUrl: 'accounts/list.html',
       controller: 'AccountsCtrl'
     })
-    .when('/setup/accounts/:id', {
+    .when('/setup/accounts/:code', {
       templateUrl: 'accounts/edit.html',
       controller: 'EditAccountCtrl'
     })
@@ -20,5 +20,27 @@ app.controller('AccountsCtrl', function($scope, Account) {
   })
 })
 
-app.controller('EditAccountCtrl', function($scope, Account) {
+app.controller('EditAccountCtrl', function($scope, Account, Toaster, $routeParams) {
+  $scope.roles = ['root', 'human', 'system']
+
+  var code = $routeParams.code
+
+  if ( code == 'new' ) {
+    $scope.isCreate = true
+    $scope.account = {}
+  } else {
+    $scope.isCreate = false
+    Account.find(code).then(function(acc) {
+      $scope.account = acc
+    })
+  }
+
+  $scope.save = function() {
+    return Toaster.follow(function() {
+      return Account.save($scope.account).then(function() {
+        return('Salvo com sucesso')
+      })
+    })
+  }
+
 })
