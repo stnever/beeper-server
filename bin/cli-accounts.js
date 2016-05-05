@@ -2,14 +2,16 @@ var _ = require('lodash'),
     Promise = require('bluebird'),
     bcrypt = Promise.promisifyAll(require('bcryptjs')),
     models = require('../src/models'),
-    tablify = require('./table').tablify
+    tablify = require('./table').tablify,
+    utils = require('../src/utils'),
+    cev = require('omit-empty')
 
 var padL = _.partialRight(_.padLeft, ' ')
 
 exports.show = function(args) {
-  if ( args.account == null ) throw new Error('Missing --account code')
-  return models.Account.findOne({code: args.account}).tap(function(acc) {
-    console.log(JSON.stringify(acc, null, ' '))
+  if ( argv.code == null ) throw new Error('Missing account code (--code <some-account>)')
+  return models.Account.findOne({code: args.code}).tap(function(acc) {
+    console.log(utils.jp(acc))
   })
 }
 
@@ -20,14 +22,6 @@ exports.ls = function() {
       function(row) { return (row.passwordHash != null) || false }
     ]
   }))
-
-
-  // .each(function(row) {
-  //   console.log('Account { code: %s, role: %s, email: %s, ' +
-  //     'hasPassword: %s }',
-  //     padL(row.code, 30), padL(row.role, 10),
-  //     padL(row.email, 40), row.passwordHash != null)
-  // })
 }
 
 function hash(password) {
@@ -37,8 +31,8 @@ function hash(password) {
 }
 
 exports.create = function(argv) {
-  if ( argv.code == null ) throw new Error('Missing account code')
-  if ( argv.role == null ) role = 'human'
+  if ( argv.code == null ) throw new Error('Missing account code (--code <some-account>)')
+  if ( argv.role == null ) argv.role = 'human'
 
   return hash(argv.password).then(function(passwordHash) {
     return models.Account.create({
@@ -51,6 +45,7 @@ exports.create = function(argv) {
 }
 
 exports.update = function(argv) {
+  if ( argv.code == null ) throw new Error('Missing account code (--code <some-account>)')
   return models.Account.findOne({
     code: argv.code
   }).then(function(acc) {
@@ -58,14 +53,14 @@ exports.update = function(argv) {
       throw new Error('No such account: ' + argv.code )
 
     return hash(argv.password).then(function(passwordHash) {
-      _.merge(acc, {
+      _.merge(acc, cev({
         passwordHash: passwordHash,
         email: argv.email,
         role: argv.role,
         subscriptions: argv.subscriptions
-      })
+      }))
 
-      console.log('merged account:', acc)
+      console.log('merged account:', utils.jp(acc))
 
       return models.Account.update(acc._id, acc)
     })

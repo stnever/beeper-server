@@ -15,9 +15,11 @@ exports.ls = function() {
 
 exports.create = function(args) {
   if ( args.account == null ) throw new Error('Missing account')
+  if ( args.code == null )
+    args.code = randomstring.generate()
 
   return models.Token.create({
-    code: randomstring.generate(),
+    code: args.code,
     account: args.account
   })
 }

@@ -2,6 +2,9 @@ var _ = require('lodash'),
     util = require('util'),
     moment = require('moment')
 
+exports.j = function(o) { return JSON.stringify(o) }
+exports.jp = function(o) { return JSON.stringify(o, null, ' ') }
+
 module.exports.httpErr = function(status, message) {
   var msg = util.format.apply(util, _.rest(arguments));
   var e = new Error(msg);
