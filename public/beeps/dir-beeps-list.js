@@ -12,7 +12,7 @@ app.directive('beepsList', function() {
           <span class="fa fa-level-down pull-right"></span>
         </div>
 
-        <div class="list-group">
+        <div class="list-group beeps-list">
 
           <div class="list-group-item" ng-repeat="b in day.items">
             <div class="media">
@@ -25,13 +25,27 @@ app.directive('beepsList', function() {
                 <h4 class="list-group-item-heading">
                   <a href="#/sources/{{b.source}}">{{b.source}}</a>
 
-                  <span class="text-muted">
-                    {{b.timestamp | moment:'MMM DD, HH:mm:ss'}}
+                  <span class="beep-timestamp">
+                  {{b.timestamp | moment:'HH:mm:ss'}}
                   </span>
+
+                  <span class="beep-tags">
+                    <span ng-repeat="t in b.tags">#{{t}} </span>
+                  </span>
+
                 </h4>
                 <p class="list-group-item-text lead">
                   {{b.contents}}
                 </p>
+
+              </div>
+
+              <div class="media-right media-middle">
+                <a class="beep-details-link"
+                  href="#/beeps/{{b._id}}"
+                  ng-click="openDetailsModal(b); $event.preventDefault()">
+                  <span class="fa fa-lg fa-chevron-right"></span>
+                </a>
               </div>
             </div>
           </div>
@@ -42,11 +56,21 @@ app.directive('beepsList', function() {
     scope: {
       data: '='
     },
-    controller: function($scope) {
+    controller: function($scope, $modal) {
       $scope.$watch('data', function(newVal) {
         if ( newVal != null )
           $scope.days = utils.groupByDay(newVal)
       }, true)
+
+      $scope.openDetailsModal = function(beep) {
+        $modal.open({
+          templateUrl: 'beeps/details-modal.html',
+          size: 'lg',
+          controller: function($scope) {
+            $scope.beep = beep
+          }
+        })
+      }
     }
   }
 })

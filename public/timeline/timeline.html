@@ -47,7 +47,7 @@ tr:hover .summary-actions a:hover {
         </button>
         <ul class="dropdown-menu">
           <li><a href ng-click="openSaveModal()">Save...</a></li>
-          <li><a href>Modify...</a></li>
+          <li><a href ng-click="openFilterModal()">Modify...</a></li>
           <li class="divider"></li>
           <li><a href ng-click="clear()">Clear</a></li>
         </ul>
@@ -90,7 +90,7 @@ tr:hover .summary-actions a:hover {
 </div>
 
 <div class="row">
-  <div class="col-sm-3 well well-sm timeline-summary">
+  <div class="col-sm-3 well well-sm timeline-summary" ng-if="hasSummary">
 
     <table>
 
@@ -142,6 +142,24 @@ tr:hover .summary-actions a:hover {
     <div class="alert alert-warning" ng-if="beeps.length < 1">
       No beeps to display.
     </div>
+
+    <nav>
+      <ul class="pager">
+        <li class="previous" ng-if="page != 0">
+          <a href ng-click="gotoPage('prev')">
+            <span class="fa fa-angle-left"></span>
+            Prev
+          </a>
+        </li>
+
+        <li class="next">
+          <a href ng-click="gotoPage('next')">
+            Next
+            <span class="fa fa-angle-right"></span>
+          </a>
+        </li>
+      </ul>
+    </nav>
 
   </div>
 </div>

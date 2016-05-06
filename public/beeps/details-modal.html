@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="$dismiss()">&times;</button>
+  <h3 class="modal-title">{{beep.source}}</h3>
+</div>
+
+<div class="modal-body beep-details-modal">
+
+  <tabset>
+    <tab heading="Beep">
+      <label>ID:</label>
+      <p>{{beep._id}}</p>
+
+      <label>Received:</label>
+      <p>{{beep.timestamp | moment:'YYYY-MM-DD HH:mm:ss ZZ'}}</p>
+
+      <label>Contents</label>
+      <p>{{beep.contents}}</p>
+
+      <label>Tags</label>
+      <p>
+        <span ng-repeat="t in beep.tags">#{{t}} </span>
+      </p>
+    </tab>
+
+    <tab heading="Email">
+      <div class="well well-sm">
+        <h4>{{beep.data.emailSubject || '(no subject)'}}</h4>
+        <h5>from: {{beep.data.emailFrom}}</h5>
+      </div>
+
+      <div ng-bind-html="beep.data.emailHtml | trusted"></div>
+    </tab>
+
+    <tab heading="JSON">
+      <pre>{{beep | prettyJson}}</pre>
+    </tab>
+
+  </tabset>
+
+</div>

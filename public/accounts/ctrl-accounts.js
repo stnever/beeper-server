@@ -20,7 +20,7 @@ app.controller('AccountsCtrl', function($scope, Account) {
   })
 })
 
-app.controller('EditAccountCtrl', function($scope, Account, Toaster, $routeParams) {
+app.controller('EditAccountCtrl', function($scope, Account, Toaster, $routeParams, $modal, $location) {
   $scope.roles = ['root', 'human', 'system']
 
   var code = $routeParams.code
@@ -35,10 +35,52 @@ app.controller('EditAccountCtrl', function($scope, Account, Toaster, $routeParam
     })
   }
 
+  $scope.openEditModal = function(sub) {
+    $modal.open({
+      templateUrl: 'subscriptions/edit-modal.html',
+      resolve: { sub: function() { return sub }},
+      controller: function($scope, sub) {
+        $scope.sub = _.clone(sub)
+      }
+    }).result.then(function(newSub) {
+      _.assign(sub, newSub)
+    })
+  }
+
+  $scope.confirmDelete = function() {
+    $modal.open({
+      template: `
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="$dismiss()">&times;</button>
+          <h3 class="modal-title">Confirm Delete</h3>
+        </div>
+
+        <div class="modal-body">
+          <p>Are you sure you want to delete the <code>${code}</code> account?</p>
+          <p>This action cannot be undone.</p>
+        </div>
+
+        <div class="modal-footer text-right">
+          <button class="btn btn-default" ng-click="$dismiss()">No, don't delete</button>
+          <button class="btn btn-danger" ng-click="$close(true)">Yes, delete it</button>
+        </div>
+      `
+    }).result.then(function(confirmed) {
+      if ( !confirmed ) return
+      Toaster.follow(function() {
+        return Account.delete(code).then(function() {
+          $location.path('/accounts')
+          return 'Deleted successfully'
+        })
+      })
+    })
+  }
+
+
   $scope.save = function() {
     return Toaster.follow(function() {
       return Account.save($scope.account).then(function() {
-        return('Salvo com sucesso')
+        return('Saved successfully')
       })
     })
   }

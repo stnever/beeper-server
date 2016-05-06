@@ -6779,6 +6779,9 @@ button.close {
 .filter-item.tag .filter-label {
   color: lightgreen;
 }
+.filter-item.all .filter-label {
+  color: white;
+}
 .timeline-summary table {
   width: 100%;
 }
@@ -7096,4 +7099,48 @@ button.close {
   stroke-width: 20;
   stroke-linecap: round;
   stroke: rgba(0, 0, 0, 0.1);
+}
+.beeps-list .list-group-item {
+  padding: 10px;
+}
+.beeps-list .beep-timestamp {
+  color: #ccc;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+.beeps-list .beep-timestamp:before {
+  content: '\00b7';
+  margin: 0 10px;
+}
+.beeps-list h4.list-group-item-heading a {
+  font-weight: bold;
+}
+.beeps-list .beep-tags {
+  color: #ccc;
+  font-size: 14px;
+}
+.beeps-list .beep-tags:before {
+  content: '\00b7';
+  margin: 0 10px;
+}
+.beeps-list .beep-tags span + span {
+  margin-left: 5px;
+}
+.beeps-list .beep-details-link {
+  padding: 25px 10px;
+  display: inline-block;
+  border-radius: 1px;
+}
+.beeps-list .beep-details-link:hover {
+  background-color: #eee;
+}
+.beep-details-modal .nav {
+  margin-bottom: 15px;
+}
+body,
+body.modal-open {
+  overflow-y: scroll;
+}
+.modal-lg {
+  width: 1280px;
 }

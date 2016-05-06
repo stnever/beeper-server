@@ -3,15 +3,26 @@
   "version": "0.1.0",
   "description": "You very own twitter-like server",
   "main": "beeper-server.js",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prestart": "npm run bundle",
     "prepublish": "npm run bundle",
-    "bundle": "browserify -t bulkify public/app.js -o public/bundle.js -t [ babelify --presets [ es2015 ] ]",
-    "watch": "watchify -t bulkify public/app.js -o public/bundle.js -t [ babelify --presets [ es2015 ] ] --poll=400 -v",
+    "lessc": "lessc public/css/less/beeper-styles.less public/css/beeper-styles.css",
+    "watch-lessc": "npm-watch",
+    "browserify": "browserify -t bulkify public/app.js -o public/bundle.js -t [ babelify --presets [ es2015 ] ]",
+    "watch-browserify": "watchify -t bulkify public/app.js -o public/bundle.js -t [ babelify --presets [ es2015 ] ] --poll=400 -v",
     "serve": "DEBUG=beeper:* node beeper-server.js",
-    "all": "parallelshell \"npm run watch\" \"npm run serve\"",
+    "all": "parallelshell \"npm run watch-lessc\" \"npm run watch-browserify\" \"npm run serve\"",
     "start": "npm run all"
+  },
+  "watch": {
+    "lessc": {
+      "patterns": [
+        "public/css"
+      ],
+      "extensions": "less"
+    }
   },
   "keywords": [],
   "author": "stnever (http://github.com/stnever)",
@@ -45,6 +56,7 @@
     "bulk-require": "^0.2.1",
     "bulkify": "^1.1.1",
     "envify": "^3.4.0",
+    "npm-watch": "^0.1.4",
     "should": "^7.1.0",
     "watchify": "^3.6.1"
   }

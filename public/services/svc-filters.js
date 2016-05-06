@@ -16,6 +16,17 @@ module.exports
       return moment(date).format(fmt);
     }
   })
+  .filter('json', function() {
+    return function(o) { return JSON.stringify(o) }
+  })
+  .filter('prettyJson', function() {
+    return function(o) { return JSON.stringify(o, null, ' ') }
+  })
+  .filter('trusted', ['$sce', function($sce) {
+    return function(text) {
+      return $sce.trustAsHtml(text)
+    }
+  }])
   .run(function($rootScope) {
     $rootScope.len = function(obj) {
       if ( obj == null ) return 0;

@@ -101,6 +101,8 @@ app.factory('Toaster', function($rootScope, $timeout, $q) {
   }
 
   function success(opts) {
+    if ( opts == null ) opts = {}
+
     if ( _.isString(opts) ) {
       opts = {message: opts}
     }

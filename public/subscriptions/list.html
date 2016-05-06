@@ -5,46 +5,32 @@
         <tr>
           <th>Name</th>
           <th>Criteria</th>
-          <th>Send email?</th>
-          <th>Add to inbox?</th>
+          <th class="text-center">Send email?</th>
+          <th class="text-center">Add to inbox?</th>
           <th></th>
         </tr>
       </thead>
       <tr ng-repeat="sub in subs">
-        <td>{{sub.name}}</td>
+
+        <td>
+          <a href ng-click="openEditModal(sub)">
+            {{sub.name || 'Untitled ' + $index}}
+          </a>
+        </td>
+
         <td class="timeline-filter">
-
-          <div class="filter-item source"
-            ng-repeat="s in sub.criteria.sources">
-            <span class="filter-label">{{s}}</span>
-          </div>
-
-          <div class="filter-item source"
-            ng-repeat="s in sub.criteria.withoutSources">
-            <span class="filter-label">not: {{s}}</span>
-          </div>
-
-          <div class="filter-item tag"
-            ng-repeat="t in sub.criteria.tags">
-            <span class="filter-label">{{t}}</span>
-          </div>
-
-          <div class="filter-item tag"
-            ng-repeat="t in sub.criteria.withoutTags">
-            <span class="filter-label">not: {{t}}</span>
-          </div>
-
+          <crit-list crit="sub.criteria"></crit-list>
         </td>
 
-        <td>
-          <toggle ng-model="sub.email"></toggle>
+        <td class="text-center">
+          <toggle readonly="true" ng-model="sub.email"></toggle>
         </td>
 
-        <td>
-          <toggle ng-model="sub.inbox"></toggle>
+        <td class="text-center">
+          <toggle readonly="true" ng-model="sub.inbox"></toggle>
         </td>
 
-        <td>
+        <td class="text-center">
           <a href ng-click="subs.splice($index, 1)">
             <span class="fa fa-fw fa-trash"></span>
           </a>

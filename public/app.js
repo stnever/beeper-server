@@ -9,7 +9,8 @@ var app = angular.module('BeeperWeb', deps)
 var bulk = require('bulk-require')
 var components = bulk(__dirname, [
   '**/ctrl-*.js',
-  '**/svc-*.js'
+  '**/svc-*.js',
+  '**/dir-*.js'
 ])
 
 // Adds the default starting point

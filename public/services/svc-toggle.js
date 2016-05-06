@@ -8,24 +8,25 @@ app.directive('toggle', function() {
     transclude: true,
     replace: true,
     template: [
-      '<a href ng-click="toggle()">',
+      '<span>',
+      ' <span class="fa fa-lg fa-fw {{icon()}}" ng-if="isReadonly"></span>',
+      ' <a href ng-click="toggle()" ng-if="!isReadonly">',
       '  <span class="fa fa-lg fa-fw {{icon()}}"></span>',
       '  <span ng-transclude></span>',
-      '</a>'
+      ' </a>',
+      '</span>'
     ].join(''),
     scope: {},
-    link: function(scope, element, attrs, ngModelCtrl) {
-      scope.ngModelCtrl = ngModelCtrl
-    },
-    controller: function($scope) {
+    link: function($scope, element, attrs, ngModelCtrl) {
+
+      $scope.isReadonly = (attrs.readonly == 'true')
+
       function getVal() {
-        if ( $scope.ngModelCtrl )
-          return $scope.ngModelCtrl.$modelValue || false;
-        return false;
+        return ngModelCtrl.$modelValue || false
       }
 
       function setVal(x) {
-        $scope.ngModelCtrl.$setViewValue(x)
+        ngModelCtrl.$setViewValue(x)
       }
 
       $scope.toggle = function() {

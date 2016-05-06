@@ -43,11 +43,19 @@ app.controller('TimelineController', function($scope, $rootScope,
     untilDate: dt($routeParams.untilDate)
   }
 
+  $scope.page = 0
+
   $scope.reload = function() {
-    Beep.findAll(filter).then(function(data) {
+    var params = _.merge({}, filter, {
+      offset: $scope.page * 20,
+      limit: 20
+    })
+
+    Beep.findAll(params).then(function(data) {
       $scope.beeps = data.rows
 
       $scope.summary = buildSummary(data.rows)
+      $scope.hasSummary = ! _.isEmpty(cev($scope.summary))
 
       var displayedSources = _.chain(data.rows).map('source').uniq().value()
       Tag.getCloud(displayedSources).then(function(rows) {
@@ -85,7 +93,6 @@ app.controller('TimelineController', function($scope, $rootScope,
   }
 
   $scope.openSaveModal = function() {
-    console.log('opening')
     $modal.open({
       template: `
         <div class="modal-body">
@@ -102,15 +109,39 @@ app.controller('TimelineController', function($scope, $rootScope,
         return Subscription.create(currentUser.code, {
           name: name,
           criteria: $scope.filter
+        }).then(function() {
+          $rootScope.$emit('subs-changed')
         })
       })
     })
   }
 
+  $scope.openFilterModal = function() {
+    $modal.open({
+      templateUrl: 'timeline/filter-modal.html',
+      resolve: {
+        crit: function() { return _.clone($scope.filter) }
+      },
+      controller: function($scope, crit) {
+        $scope.crit = crit
+      }
+    }).result.then(function(newCrit) {
+      _.assign($scope.filter, newCrit)
+    })
+  }
+
   $scope.$watch('filter', function(newVal) {
     QueryString.sync(newVal)
+    $scope.page = 0
     $scope.reload()
   }, true)
+
+  $scope.gotoPage = function(dir) {
+    if ( dir == 'next' ) $scope.page++
+    if ( dir == 'prev' ) $scope.page--
+    if ( $scope.page < 1 ) $scope.page = 0
+    $scope.reload()
+  }
 })
 
 function sorter(obj) {

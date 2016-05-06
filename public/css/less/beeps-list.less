@@ -1,0 +1,49 @@
+.beeps-list {
+  .list-group-item {
+    padding: 10px;
+  }
+
+  // h4.list-group-item-heading .text-muted:before {
+  //   content: '\00b7';
+  //   margin: 0 10px;
+  // }
+
+  .beep-timestamp {
+    color: #ccc;
+    font-size: 14px;
+    text-transform: uppercase;
+
+    &:before {
+      content: '\00b7';
+      margin: 0 10px;
+    }
+  }
+
+  h4.list-group-item-heading a { font-weight: bold; }
+
+  .beep-tags {
+    color: #ccc;
+    font-size: 14px;
+
+    &:before {
+      content: '\00b7';
+      margin: 0 10px;
+    }
+
+    span + span { margin-left: 5px; }
+  }
+
+  .beep-details-link {
+    padding: 25px 10px;
+    display: inline-block;
+    border-radius: 1px;
+
+    &:hover {
+      background-color: #eee;
+    }
+  }
+}
+
+.beep-details-modal {
+  .nav { margin-bottom: 15px; }
+}
