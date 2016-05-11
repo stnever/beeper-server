@@ -13,9 +13,11 @@ var constraints = {
   }
 }
 
-function findAccount(code) {
+function findAccount(code, opts) {
   return models.Account.findOne({code: code}).then(function(row) {
-    utils.assertNotNull(row, 'No such Account ' + code)
+    if ( _.get(opts, 'required', true) )
+      utils.assertNotNull(row, 'No such Account ' + code)
+
     return row
   })
 }
@@ -51,7 +53,7 @@ router.route('/:code')
     obj.code = code
 
     res.promise = validateAsync(obj, constraints).then(function() {
-      return findAccount(code)
+      return findAccount(code, {required: false})
     }).then(function(row) {
       if ( row == null ) return models.Account.create(obj);
       else return models.Account.update(row._id, obj);

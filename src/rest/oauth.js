@@ -70,7 +70,7 @@ exports.extractAccessToken = function(req, res, next) {
         return next(httpErr(401, 'Invalid token ' + requestToken))
 
       debug('Accessing %s %s as account %s', req.method,
-        req.url, acc.account)
+        req.url, acc.code)
 
       req.account = acc
       req.accessToken = token
