@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "bundle": "npm run browserify && npm run lessc",
     "prestart": "npm run bundle",
     "prepublish": "npm run bundle",
     "lessc": "lessc public/css/less/beeper-styles.less public/css/beeper-styles.css",
