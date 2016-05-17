@@ -8,13 +8,18 @@ var args = minimist(process.argv.slice(2))
 var configFile = args.config || './config.yaml'
 
 // Load config first, then models.
-var config = require('../src/config')
-config.load(configFile)
-var models = require('../src/models')
-models.init(config)
+var config = require('../src/config').load(configFile)
+require('../src/models').init(config)
+
+// Only setup email if there's a flag for it. If the flag is
+// not set, notifications will be logged, but not sent.
+if ( args.setupEmail ) {
+  require('../src/services/notifications').init(config)
+}
 
 // Load subcommands
 var commands = {
+  post: require('./cli-post'),
   accounts: require('./cli-accounts'),
   tokens: require('./cli-tokens'),
   subscriptions: require('./cli-subscriptions'),

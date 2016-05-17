@@ -9,6 +9,8 @@ module.exports = {
   load: function(file) {
     var config = yaml.safeLoad(fs.readFileSync(file, 'utf-8'));
     _.assign(this, config);
+
+    return this
   }
 
 }

@@ -31,12 +31,11 @@ exports.sendSms = function(beep, account) {
 
 var sendAsync = null
 
-exports.sendEmail = function(beep, account) {
-  debug('Sending email to account %s: %s (nodemailer set up? %s)',
-    account.code, account.email, sendAsync != null)
+exports.sendEmail = function(beep, to) {
+  debug('Sending email to %s (nodemailer set up? %s)',
+    to, sendAsync != null)
 
-  if ( account.email == null ||
-    account.email.trim().length < 1 )
+  if ( to == null || to.trim().length < 1 )
     return Promise.resolve();
 
   if ( !sendAsync ) return Promise.resolve();
@@ -55,14 +54,14 @@ exports.sendEmail = function(beep, account) {
   }
 
   var mail = {
-    to: account.email,
+    to: to,
     from: _.get(beep, 'data.emailFrom', emailConfig.defaultSender),
     subject: _.get(beep, 'data.emailSubject', firstLine(beep.contents)),
     html: html
   }
 
   return sendAsync(mail).tap(function() {
-    debug('Email sent to %s', account.email)
+    debug('Email sent to %s', to)
   }).catch(function(err) {
     debug(err.stack)
   })

@@ -21,7 +21,7 @@ exports.display = function(opts, rows) {
     data.push(tabRow)
   })
 
-  var output = table.default(data, {
+  var tableOpts = _.merge({}, {
     border: {
         topBody: '-',
         topJoin: '-',
@@ -44,7 +44,10 @@ exports.display = function(opts, rows) {
     },
     columnDefault: { paddingLeft: 1, paddingRight: 1 },
     drawHorizontalLine: function(i) { return i == 1 }
-  })
+  }, _.omit(opts, 'head', 'pick', 'showCount'))
+
+  // default pq o módulo table é ES2015
+  var output = table.default(data, tableOpts)
 
   console.log(output)
   if ( _.get(opts, 'showCount', true) )

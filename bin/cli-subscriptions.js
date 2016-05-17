@@ -15,7 +15,12 @@ exports.ls = function(args) {
 
   return models.Account.findAll().tap(tablify({
     head: ['Account', 'Subscriptions'],
-    pick: ['code', function(acc) { return JSON.stringify(acc.subscriptions || 'null')}]
+    pick: ['code', function(acc) { return JSON.stringify(acc.subscriptions || 'null')}],
+    columns: {
+      1: {
+        width: 80
+      }
+    }
   }))
 }
 
