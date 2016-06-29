@@ -55,7 +55,7 @@ Wrapper.prototype.findOne = function(filter) {
 }
 
 Wrapper.prototype.findAllAndCount = function(filter) {
-  var where = _.omit(filter, 'offset', 'limit', 'order', 'attributes');
+  var where = _.omit(filter, 'offset', 'limit', 'sort', 'order', 'attributes');
   var me = this;
   var result = {}
   return me.model.count(where).exec().then(function(count) {

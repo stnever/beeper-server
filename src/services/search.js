@@ -40,6 +40,10 @@ function hasAny(a, b) {
   return _.intersection(a, b).length > 0
 }
 
+function hasAll(a, b) {
+  return _.difference(b, a).length == 0
+}
+
 function m(s) {
   if ( s == null || s.trim().length < 1 ) return null
   return moment(s)
@@ -89,8 +93,8 @@ exports.match = function(beep, filter) {
   if ( filter.untilDate ) // exclusive
     ok = ok && moment(beep.timestamp).isBefore(filter.untilDate)
 
-  // Tem que ter ao menos uma
-  if ( filter.tags && !hasAny(beep.tags, filter.tags) )
+  // Tem que ter todas
+  if ( filter.tags && !hasAll(beep.tags, filter.tags) )
     ok = false
 
   // Não pode ter nenhuma
@@ -116,7 +120,7 @@ exports.searchBeeps = function(filter) {
       $lte: m(filter.untilDate)
     },
     tags: {
-      $in: filter.tags,
+      $all: filter.tags,
       $nin: filter.withoutTags
     },
     source: {

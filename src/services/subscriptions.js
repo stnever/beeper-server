@@ -6,34 +6,34 @@ var _ = require('lodash'),
     notifications = require('./notifications')
 
 exports.checkSubscriptions = function(beep) {
-  var emails = []
+  return models.Account.findAll().then(function(accounts) {
 
-  return models.Account.findAll().map(function(account) {
-    // debug('Checking subscriptions for account %s', account.code)
-    var sub = _.find(account.subscriptions, function(sub) {
-      return search.match(beep, sub.criteria)
+    var accountsToEmail = _.filter(accounts, function(a) {
+      return exports.shouldSendEmail(a, beep)
     })
 
-    if ( sub == null ) {
-      debug('No matching subscriptions for account %s', account.code)
-      return;
+    // TODO idem para SMS
+
+    if ( accountsToEmail.length < 1 ) {
+      debug('No subscriptions matched this beep')
+      return
     }
 
-    debug('Subscription match: account %s, email %s, sendEmail? %s, ' +
-      'sendSms? %s, addToInbox? %s, criteria %j',
-      account.code, account.email, sub.email, sub.sms, sub.inbox,
-      sub.criteria)
+    debug('Accounts to be notified by email: %s',
+    _.map(accountsToEmail, 'code').join(','))
 
-    var promises = []
-    if ( sub.sms   ) promises.push(notifications.sendSms(beep, account))
-    // if ( sub.email ) promises.push(notifications.sendEmail(beep, account))
-    if ( sub.email ) emails.push(account.email)
+    var to = _.chain(accountsToEmail)
+      .map('email').compact().uniq().value().join(',')
 
-    return Promise.all(promises)
-  }).then(function() {
-    var to = _.compact(emails).join(',')
-
-    // NB: this will wait for the notifications to be sent.
     return notifications.sendEmail(beep, to)
   })
+
+}
+
+exports.shouldSendEmail = function(account, beep) {
+  var ok = _.any(account.subscriptions, function(sub) {
+    return sub.email && search.match(beep, sub.criteria)
+  })
+
+  return ok
 }

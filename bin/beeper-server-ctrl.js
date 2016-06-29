@@ -25,7 +25,8 @@ var commands = {
   subscriptions: require('./cli-subscriptions'),
   subs: require('./cli-subscriptions'),
   tags: require('./cli-tags'),
-  sources: require('./cli-sources')
+  sources: require('./cli-sources'),
+  beeps: require('./cli-beeps')
 }
 
 function outputHelp() {
