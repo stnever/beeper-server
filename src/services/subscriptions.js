@@ -23,9 +23,13 @@ exports.checkSubscriptions = function(beep) {
     _.map(accountsToEmail, 'code').join(','))
 
     var to = _.chain(accountsToEmail)
-      .map('email').compact().uniq().value().join(',')
+      .map('email').compact().uniq().value()
 
-    return notifications.sendEmail(beep, to)
+    return notifications.sendEmail(beep, to.join(',')).then(function() {
+      if ( beep.data == null ) beep.data = {}
+      beep.data.notifiedEmails = to
+      return models.Beep.update(beep._id, beep)
+    })
   })
 
 }
