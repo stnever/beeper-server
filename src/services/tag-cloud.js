@@ -4,6 +4,11 @@ var _ = require('lodash'),
     cev = require('omit-empty'),
     utils = require('../utils.js')
 
+function m(s) {
+  if ( s == null || s.trim().length < 1 ) return null
+  return moment(s)
+}
+
 exports.calculateTagCloud = function(filter) {
   filter = filter || {}
 
@@ -33,9 +38,20 @@ exports.calculateTagCloud = function(filter) {
     out: {inline: 1}
   }
 
-  if ( filter.sources ) opts.query = {
-    source: {$in: utils.s2a(filter.sources)}
-  }
+  opts.query = cev({
+    timestamp: {
+      $gte: m(filter.fromDate),
+      $lte: m(filter.untilDate)
+    },
+    tags: {
+      $all: utils.s2a(filter.tags),
+      $nin: utils.s2a(filter.withoutTags)
+    },
+    source: {
+      $in: utils.s2a(filter.sources),
+      $nin: utils.s2a(filter.withoutSources)
+    }
+  })
 
   return models.Beep.model.mapReduce(opts).then(function(rows) {
     return _.chain(rows).sortBy('value').map(function(row) {
