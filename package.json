@@ -6,16 +6,17 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "bundle": "npm run browserify && npm run lessc",
-    "prestart": "npm run bundle",
-    "prepublish": "npm run bundle",
-    "lessc": "lessc public/css/less/beeper-styles.less public/css/beeper-styles.css",
-    "watch-lessc": "npm-watch",
-    "browserify": "browserify -t bulkify public/app.js -o public/bundle.js -t [ babelify --presets [ es2015 ] ]",
-    "watch-browserify": "watchify -t bulkify public/app.js -o public/bundle.js -t [ babelify --presets [ es2015 ] ] --poll=400 -v",
+    "//bundle": "npm run browserify && npm run lessc",
+    "//prestart": "npm run bundle",
+    "//prepublish": "npm run bundle",
+    "//lessc": "lessc public/css/less/beeper-styles.less public/css/beeper-styles.css",
+    "//watch-lessc": "npm-watch",
+    "//browserify": "browserify -t bulkify public/app.js -o public/bundle.js -t [ babelify --presets [ es2015 ] ]",
+    "//watch-browserify": "watchify -t bulkify public/app.js -o public/bundle.js -t [ babelify --presets [ es2015 ] ] --poll=400 -v",
     "serve": "DEBUG=beeper:* node beeper-server.js",
-    "all": "parallelshell \"npm run watch-lessc\" \"npm run watch-browserify\" \"npm run serve\"",
-    "start": "npm run all"
+    "//all": "parallelshell \"npm run watch-lessc\" \"npm run watch-browserify\" \"npm run serve\"",
+    "//start": "npm run all",
+    "start": "npm run serve"
   },
   "watch": {
     "lessc": {
@@ -45,6 +46,7 @@
     "mongoose": "^4.4.14",
     "nodemailer": "^2.3.0",
     "omit-empty": "github:stnever/omit-empty",
+    "beeper-web": "github:stnever/beeper-web",
     "randomstring": "^1.1.4",
     "showdown": "^1.3.0",
     "table": "^3.7.8",

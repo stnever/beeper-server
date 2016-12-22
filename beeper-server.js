@@ -27,7 +27,7 @@ require('./src/services/notifications').init(config)
 
 var app = exports.app = express();
 app.use(cors());
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/node_modules/beeper-web'));
 app.use(bodyParser.json({limit: '50mb'})); // for parsing application/json
 
 
