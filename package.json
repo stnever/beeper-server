@@ -49,7 +49,7 @@
     "beeper-web": "github:stnever/beeper-web",
     "randomstring": "^1.1.4",
     "showdown": "^1.3.0",
-    "table": "^3.7.8",
+    "table": "3.7.8",
     "validate.js": "^0.8.0"
   },
   "devDependencies": {
