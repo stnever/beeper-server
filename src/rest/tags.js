@@ -6,7 +6,7 @@ var _ = require('lodash'),
 module.exports = router;
 
 router.get('/', function(req, res) {
-  res.promise = tagCloud.calculateTagCloud({
-    sources: req.query.sources
-  })
+  var filter = _.pick(req.query, 'fromDate', 'untilDate',
+    'sources', 'withoutSources', 'tags', 'withoutTags')
+  res.promise = tagCloud.calculateTagCloud(filter)
 })

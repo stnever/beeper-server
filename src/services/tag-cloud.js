@@ -1,4 +1,5 @@
 var _ = require('lodash'),
+    moment = require('moment'),
     Promise = require('bluebird'),
     models = require('../models'),
     cev = require('omit-empty'),
@@ -6,7 +7,7 @@ var _ = require('lodash'),
 
 function m(s) {
   if ( s == null || s.trim().length < 1 ) return null
-  return moment(s)
+  return moment(s).toDate()
 }
 
 exports.calculateTagCloud = function(filter) {

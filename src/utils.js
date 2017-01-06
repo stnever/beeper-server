@@ -63,5 +63,6 @@ exports.logQs = function(obj) {
 exports.s2a = function(s) {
   if ( s == null ) return []
   if ( _.isArray(s) ) return s
+  if ( s.trim().length == 0 ) return []
   return s.split(',').map(function(p) { return p.trim() })
 }
