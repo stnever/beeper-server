@@ -4,7 +4,8 @@ var _ = require('lodash'),
     models = require('../src/models'),
     tablify = require('./table').tablify,
     utils = require('../src/utils'),
-    cev = require('omit-empty')
+    cev = require('omit-empty'),
+    randomstring = require('randomstring')
 
 var padL = _.partialRight(_.padLeft, ' ')
 
@@ -41,6 +42,18 @@ exports.create = function(argv) {
       role: argv.role,
       email: argv.email
     })
+  }).then(function(account) {
+    if ( !argv.createToken ) return account;
+
+    var tokenCode = randomstring.generate()
+
+    return models.Token.create({
+      code: tokenCode,
+      account: account.code
+    }).then(function() {
+      console.log('Created token for account %s: %s',
+        account.code, tokenCode)
+    }).then(function() { return account })
   })
 }
 
